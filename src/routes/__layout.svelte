@@ -1,12 +1,8 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-
 	import AboutMe from "$lib/App/AboutMe.svelte";
-
 	import Glass from "$lib/GlassUI/Glass.svelte";
-
 	import GlassApp from "$lib/GlassUI/GlassApp.svelte";
-
 	import "../app.css";
 </script>
 

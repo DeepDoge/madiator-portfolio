@@ -35,7 +35,7 @@
     }
 
     .color-layer {
-        filter: opacity(.5);
+        filter: opacity(0.5);
     }
 
     .color-layer {

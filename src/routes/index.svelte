@@ -1,7 +1,6 @@
 <script context="module" lang="ts">
 	import Card from "$lib/App/Card.svelte";
 	import { cards } from "$lib/App/cards";
-	import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
 	import Row from "$lib/Row.svelte";
 
 	export const prerender = true;

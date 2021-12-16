@@ -9,10 +9,10 @@
 </script>
 
 <script lang="ts">
-    import BeforeAfterImage from "./BeforeAfterImage.svelte";
-    import type { BeforeAfterMode } from "./BeforeAfterImage.svelte";
-    import Modal from "$lib/GlassUI/Modal.svelte";
     import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
+    import Modal from "$lib/GlassUI/Modal.svelte";
+    import type { BeforeAfterMode } from "./BeforeAfterImage.svelte";
+    import BeforeAfterImage from "./BeforeAfterImage.svelte";
 
     export let card: CardData;
     export let mode: BeforeAfterMode;

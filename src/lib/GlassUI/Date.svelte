@@ -1,7 +1,7 @@
 <script lang="ts">
     import GlassPanel from "$lib/GlassUI/GlassElementBackground.svelte";
     import { makeid } from "$modules/makeid";
-    import { onDestroy,onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import NotAllowed from "./NotAllowed.svelte";
 
     export let width: string = "100%";

@@ -4,11 +4,12 @@
 <div class="container">
     <img src="https://cdn.discordapp.com/avatars/190142601481945088/a_4a896de9c9af5f4af416ae25ae72f837.gif" alt="Madiator Avatar" />
     <div class="content">
-    <h1>About Me</h1>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit maxime, dignissimos magnam debitis, vel ducimus maiores distinctio omnis atque eius accusamus temporibus esse sapiente dolorem nihil a! Temporibus, nemo beatae.
-    </p>
-</div>
+        <h1>About Me</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit maxime, dignissimos magnam debitis, vel ducimus maiores distinctio omnis atque eius accusamus
+            temporibus esse sapiente dolorem nihil a! Temporibus, nemo beatae.
+        </p>
+    </div>
 </div>
 
 <style>
@@ -21,7 +22,7 @@
 
         align-items: center;
         justify-content: center;
-        font-size: .9rem;
+        font-size: 0.9rem;
     }
 
     .content {

@@ -1,7 +1,5 @@
 <!-- svelte-ignore module-script-reactive-declaration -->
 <script lang="ts">
-    import { fade,fly,scale } from "svelte/transition";
-
     export let active = false;
     export let idealWidth: string = "auto";
 

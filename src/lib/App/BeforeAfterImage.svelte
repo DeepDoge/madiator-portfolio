@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+    import Ripple from "$lib/GlassUI/Ripple.svelte";
     import { writable } from "svelte/store";
 
     export type BeforeAfterMode = "preview" | "compare";
@@ -13,8 +14,6 @@
 </script>
 
 <script lang="ts">
-    import Ripple from "$lib/GlassUI/Ripple.svelte";
-
     export let beforeSrc: string = null;
     export let afterSrc: string = null;
 
@@ -24,7 +23,7 @@
 
     let containerElement: HTMLDivElement;
     function mouse(event: MouseEvent | TouchEvent) {
-        if (mode === 'compare') event.preventDefault()
+        if (mode === "compare") event.preventDefault();
         if (event instanceof MouseEvent && !$mouseDown) return;
         const rect = containerElement.getBoundingClientRect();
         const localX = (event instanceof MouseEvent ? event.x : event.touches[0].pageX) - rect.x;
@@ -47,8 +46,8 @@
         <img class="after" src={afterSrc} alt={null} />
         <div class="slider" />
         {#if mode === "preview"}
-        <Ripple />
-    {/if}
+            <Ripple />
+        {/if}
     </div>
 </div>
 
