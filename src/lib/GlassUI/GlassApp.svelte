@@ -62,8 +62,12 @@
     :global(p) {
         font-weight: 400;
         color: var(--g-text-color);
-        margin-top: 0;
-        margin-bottom: 0 0 1em 0;
+        margin: 0;
+    }
+
+    :global(img) {
+        display: block;
+        max-width: 100%;
     }
 
     :global(p) {

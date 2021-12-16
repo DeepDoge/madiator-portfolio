@@ -1,4 +1,7 @@
 <script context="module" lang="ts">
+	import AboutMe from "$lib/App/AboutMe.svelte";
+	import Cards from "$lib/App/Cards.svelte";
+
 	export const prerender = true;
 </script>
 
@@ -6,48 +9,40 @@
 	<title>Home</title>
 </svelte:head>
 
-<section>
-	<h1>
-		<div class="welcome">
-			<picture>
-				<source srcset="svelte-welcome.webp" type="image/webp" />
-				<img src="svelte-welcome.png" alt="Welcome" />
-			</picture>
-		</div>
+<div id="sections">
+	<section id="about-me">
+		<AboutMe />
+	</section>
 
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/index.svelte</strong>
-	</h2>
-</section>
+	<section id="cards">
+		<h1>My Works</h1>
+		<Cards />
+	</section>
+</div>
 
 <style>
-	section {
+	#sections {
+		display: grid;
+		grid-auto-flow: row;
+		gap: 1em;
+		justify-items: center;
+	}
+
+	#about-me {
 		display: flex;
-		flex-direction: column;
 		justify-content: center;
-		align-items: center;
-		flex: 1;
+		width: 100%;
+		padding: clamp(1em, 5%, 3em);
 	}
 
-	h1 {
-		width: 100%;
+	#cards {
+		width: min(100em, 100%);
 	}
 
-	.welcome {
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
+	#cards h1 {
 		display: block;
+		font-size: 2rem;
+		padding-bottom: .5em;
+		text-align: left;
 	}
 </style>

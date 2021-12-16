@@ -11,6 +11,7 @@
 <style>
     div {
         display: grid;
+        width: 100%;
         grid-template-columns: repeat(var(--type), minmax(min(var(--ideal-size), 100%), 1fr));
         gap: var(--gap);
         justify-items: center;
