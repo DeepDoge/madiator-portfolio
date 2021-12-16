@@ -4,8 +4,8 @@
 </script>
 
 <div class="g-theme-root container" class:fill class:dark>
-    <span class="blur-layer" />
     <span class="color-layer" />
+    <span class="blur-layer" />
     <div class="content">
         <slot />
     </div>
@@ -31,11 +31,11 @@
     }
 
     .blur-layer {
-        backdrop-filter: blur(30px);
+        backdrop-filter: blur(50px);
     }
 
     .color-layer {
-        filter: opacity(0.3);
+        filter: opacity(.5);
     }
 
     .color-layer {

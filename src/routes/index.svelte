@@ -1,6 +1,8 @@
 <script context="module" lang="ts">
-	import AboutMe from "$lib/App/AboutMe.svelte";
-	import Cards from "$lib/App/Cards.svelte";
+	import Card from "$lib/App/Card.svelte";
+	import { cards } from "$lib/App/cards";
+	import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
+	import Row from "$lib/Row.svelte";
 
 	export const prerender = true;
 </script>
@@ -9,40 +11,20 @@
 	<title>Home</title>
 </svelte:head>
 
-<div id="sections">
-	<section id="about-me">
-		<AboutMe />
-	</section>
-
-	<section id="cards">
-		<h1>My Works</h1>
-		<Cards />
-	</section>
+<div class="inner">
+	<h1>Shows</h1>
+	<Row idealSize="25em" gap="1.5em">
+		<!-- intead of index im gonna use id later as key -->
+		{#each cards as card, index (index)}
+			<Card mode="preview" {card} />
+		{/each}
+	</Row>
 </div>
 
 <style>
-	#sections {
+	.inner {
 		display: grid;
 		grid-auto-flow: row;
-		gap: 1em;
-		justify-items: center;
-	}
-
-	#about-me {
-		display: flex;
-		justify-content: center;
-		width: 100%;
-		padding: clamp(1em, 5%, 3em);
-	}
-
-	#cards {
-		width: min(100em, 100%);
-	}
-
-	#cards h1 {
-		display: block;
-		font-size: 2rem;
-		padding-bottom: .5em;
-		text-align: left;
+		gap: 2em;
 	}
 </style>

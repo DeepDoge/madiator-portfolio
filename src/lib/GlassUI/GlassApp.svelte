@@ -27,6 +27,7 @@
         --g-accent-color: #ff3e00;
         --g-accent-text-color: #fff;
 
+        --g-body-color: #b4b7c0;
         --g-background-color: #edf0f8;
         --g-text-color: #444444;
 
@@ -42,7 +43,8 @@
         --g-accent-color: #ff3e00;
         --g-accent-text-color: #fff;
 
-        --g-background-color: #141414;
+        --g-body-color: rgb(20, 20, 20);
+        --g-background-color: #000;
         --g-text-color: #edf0f8;
 
         --g-info-color: blue;
@@ -53,7 +55,7 @@
     #glass-app {
         min-height: 100%;
         width: 100%;
-        background-color: var(--g-background-color);
+        background-color: var(--g-body-color);
         color: var(--g-text-color);
     }
 

@@ -10,20 +10,36 @@
 
 <script lang="ts">
     import BeforeAfterImage from "./BeforeAfterImage.svelte";
+    import type { BeforeAfterMode } from "./BeforeAfterImage.svelte";
+    import Modal from "$lib/GlassUI/Modal.svelte";
+    import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
 
     export let card: CardData;
+    export let mode: BeforeAfterMode;
 </script>
 
-<article>
-    <BeforeAfterImage beforeSrc={card.image.before} afterSrc={card.image.after} />
-    <p>{card.text}</p>
-</article>
+<Modal />
+
+<a href="/show/id">
+    <article>
+        <GlassContainer fill>
+            <div class="image-wrapper">
+                <BeforeAfterImage {mode} beforeSrc={card.image.before} afterSrc={card.image.after} />
+            </div>
+        </GlassContainer>
+        <GlassContainer fill>
+            <p title={card.text}>{card.text}</p>
+        </GlassContainer>
+    </article>
+</a>
 
 <style>
     article {
         display: grid;
+        width: 100%;
         grid-auto-flow: row;
-        gap: .5em
+        gap: 0.25em;
+        max-height: calc(100vh - 5em);
     }
 
     p {
@@ -32,6 +48,5 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        padding: 0 1em;
     }
 </style>
