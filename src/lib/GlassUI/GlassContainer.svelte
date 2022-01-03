@@ -14,13 +14,14 @@
 
 <style>
     .glass-wrapper {
+        width: fit-content;
         border-radius: var(--g-input-border-radius);
         overflow: hidden;
         isolation: isolate;
     }
 
     .glass-container {
-        padding: 1em;
+        padding: .75em;
     }
 
     .fill.glass-wrapper {

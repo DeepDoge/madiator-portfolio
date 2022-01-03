@@ -1,52 +1,43 @@
-<script context="module" lang="ts">
-    export interface CardData {
-        image: {
-            before: string;
-            after: string;
-        };
-        text?: string;
-    }
-</script>
-
 <script lang="ts">
     import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
     import Modal from "$lib/GlassUI/Modal.svelte";
-    import type { BeforeAfterMode } from "./BeforeAfterImage.svelte";
-    import BeforeAfterImage from "./BeforeAfterImage.svelte";
 
-    export let card: CardData;
-    export let mode: BeforeAfterMode;
+    export let text: string = null;
 </script>
 
 <Modal />
 
-<a href="/show/id">
-    <article>
-        <GlassContainer fill>
-            <div class="image-wrapper">
-                <BeforeAfterImage {mode} beforeSrc={card.image.before} afterSrc={card.image.after} />
-            </div>
+<div class="card" on:click>
+    <GlassContainer fill>
+        <div class="image-wrapper">
+            <slot />
+        </div>
+    </GlassContainer>
+    {#if text}
+        <GlassContainer>
+            <p title={text}>{text}</p>
         </GlassContainer>
-        <GlassContainer fill>
-            <p title={card.text}>{card.text}</p>
-        </GlassContainer>
-    </article>
-</a>
+    {/if}
+</div>
 
 <style>
-    article {
+    .card {
         display: grid;
         width: 100%;
         grid-auto-flow: row;
+        justify-items: center;
         gap: 0.25em;
         max-height: calc(100vh - 5em);
     }
 
     p {
-        font-size: 0.85rem;
+        padding: 0 1em;
+        font-size: 1.1rem;
         text-align: center;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        text-transform: capitalize;
+        font-weight: bold;
     }
 </style>

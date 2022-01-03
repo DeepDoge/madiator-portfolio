@@ -4,12 +4,12 @@
     export let gap: string = ".1em";
 </script>
 
-<div style="--ideal-size:{idealSize};--gap:{gap};--type:auto-{type}">
+<div class="row" style="--ideal-size:{idealSize};--gap:{gap};--type:auto-{type}">
     <slot />
 </div>
 
 <style>
-    div {
+    .row {
         display: grid;
         width: 100%;
         grid-template-columns: repeat(var(--type), minmax(min(var(--ideal-size), 100%), 1fr));

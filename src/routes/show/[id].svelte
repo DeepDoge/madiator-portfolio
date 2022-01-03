@@ -1,33 +1,46 @@
 <script context="module" lang="ts">
-    import Card from "$lib/App/Card.svelte";
-    import { cards } from "$lib/App/cards";
+    import { GetShow } from "$/plugins/api";
+    import { page } from "$app/stores";
+    import ShowImageCard from "$lib/App/ShowImageCard.svelte";
     import Row from "$lib/Row.svelte";
+    import type { Show } from "../api/get_show";
 
     export const prerender = true;
 </script>
 
 <script lang="ts">
-    let showName: string = "Show Name";
+    
+    const name = decodeURIComponent($page.params.id);
+    let showName: string = name;
+    let show: Show = null;
+    $: imageKeys = show ? Object.keys(show.images) : [];
+    if (typeof window !== "undefined") GetShow(name).then((r) => (show = r));
 </script>
 
 <svelte:head>
-    <title>{showName}</title>
+    <title>Show: {showName}</title>
 </svelte:head>
 
-<div class="inner">
-    <h1>{showName}</h1>
-    <Row idealSize="100%" gap="1.5em">
-        <!-- intead of index im gonna use id later as key -->
-        {#each cards as card, index (index)}
-            <Card mode="compare" {card} />
-        {/each}
-    </Row>
+<div class="show">
+    <h1><b>Show:</b> {showName}</h1>
+    {#if show}
+        <Row idealSize="30em" gap="1.5em">
+            <!-- intead of index im gonna use id later as key -->
+            {#each imageKeys as imageKey (imageKey)}
+                <ShowImageCard image={show.images[imageKey].image} text={imageKey[0] === '_' ? null : imageKey} />
+            {/each}
+        </Row>
+    {/if}
 </div>
 
 <style>
-    .inner {
+    .show {
         display: grid;
         grid-auto-flow: row;
         gap: 2em;
+    }
+
+    h1 {
+        text-transform: capitalize;
     }
 </style>

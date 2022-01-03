@@ -67,10 +67,14 @@
     }
 
     img {
-        object-position: top left;
+        object-position: center;
         object-fit: cover;
         width: 100%;
         height: 100%;
+    }
+
+    .container:active img {
+        pointer-events: none;
     }
 
     .before {

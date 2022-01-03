@@ -65,7 +65,7 @@
 
 	content {
 		display: block;
-		width: mind(100em, 100%);
+		width: min(100em, 100%);
 		padding: 1em;
 	}
 

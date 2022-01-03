@@ -1,29 +1,51 @@
 <script context="module" lang="ts">
+	import { GetShows } from "$/plugins/api";
 	import Card from "$lib/App/Card.svelte";
-	import { cards } from "$lib/App/cards";
 	import Row from "$lib/Row.svelte";
+	import type { ShowInfo } from "./api/get_shows";
 
 	export const prerender = true;
+</script>
+
+<script lang="ts">
+	let showInfos: ShowInfo[] = [];
+	if (typeof window !== "undefined") GetShows().then((r) => (showInfos = r));
 </script>
 
 <svelte:head>
 	<title>Home</title>
 </svelte:head>
 
-<div class="inner">
+<div class="shows">
 	<h1>Shows</h1>
-	<Row idealSize="25em" gap="1.5em">
+	<Row idealSize="30em" gap="1.5em">
 		<!-- intead of index im gonna use id later as key -->
-		{#each cards as card, index (index)}
-			<Card mode="preview" {card} />
+		{#each showInfos as showInfo (showInfo.name)}
+			<a class="show-info" href="/show/{encodeURIComponent(showInfo.name)}">
+				<Card text={showInfo.name}>
+					<img src={showInfo.thumbnail} alt={showInfo.name} />
+				</Card>
+			</a>
 		{/each}
 	</Row>
 </div>
 
 <style>
-	.inner {
+	.shows {
 		display: grid;
 		grid-auto-flow: row;
 		gap: 2em;
+	}
+
+	.show-info {
+		display: block;
+		width: 100%;
+	}
+
+	img {
+		object-fit: cover;
+		object-position: center;
+		width: 100%;
+		height: 100%;
 	}
 </style>
