@@ -7,7 +7,7 @@
 
     let mouseDown = writable(false);
     if (typeof window !== "undefined") {
-        document.addEventListener("mousedown", () => mouseDown.set(true));
+        document.addEventListener("mousedown", (e) => e.button === 0 && mouseDown.set(true));
         document.addEventListener("mouseup", () => mouseDown.set(false));
         document.addEventListener("blur", () => mouseDown.set(false));
         document.addEventListener("visibilitychange", () => mouseDown.set(false));
@@ -85,6 +85,7 @@
     class="container"
     class:mode-preview={mode === "preview"}
     class:mode-compare={mode === "compare"}
+    class:mouse-down={$mouseDown}
     style="--progress:{progress}%;--scale:{scale};--pos-x:{positionX}px;--pos-y:{positionY}px"
     on:mousemove={mouse}
     on:click={mouse}
@@ -128,23 +129,21 @@
         height: 100%;
     }
 
-    .container:active img {
+    .container.mouse-down img {
         pointer-events: none;
     }
 
-    .container:not(:active) .before {
-    }
     .container:not(:active) .slider {
         transition: left linear var(--transition-duration);
     }
     
-    .before {
+    .after {
         position: absolute;
         inset: 0;
         --from-center: calc(var(--progress) - 50%);
         --on-image: calc(var(--from-center) / var(--scale) - var(--pos-x));
         --v: calc(var(--on-image) + 50%);
-        clip-path: polygon(0% 0%, var(--v) 0%, var(--v) 100%, 0% 100%);
+        clip-path: polygon(var(--v) 0%, 100% 0%, 100% 100%, var(--v) 100%);
     }
 
     .slider {
