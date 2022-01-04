@@ -3,7 +3,7 @@
     export let fill = false;
 </script>
 
-<div class="g-theme-root container" class:fill class:dark>
+<div class="g-theme-root glass" class:fill class:dark>
     <span class="color-layer" />
     <span class="blur-layer" />
     <div class="content">
@@ -12,15 +12,15 @@
 </div>
 
 <style>
-    .container {
+    .glass {
         position: relative;
         isolation: isolate;
     }
 
-    .fill,
+    .glass.fill,
     .fill .content {
-        min-width: 100%;
-        min-height: 100%;
+        width: 100%;
+        height: 100%;
     }
 
     .blur-layer,

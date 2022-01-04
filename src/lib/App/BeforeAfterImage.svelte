@@ -107,6 +107,8 @@
 <style>
     .container {
         --transition-duration: .1s;
+        width: 100%;
+        height: 100%;
         position: relative;
         isolation: isolate;
         overflow: hidden;
@@ -122,7 +124,7 @@
 
     img {
         object-position: center;
-        object-fit: cover;
+        object-fit: contain;
         width: 100%;
         height: 100%;
     }
@@ -231,5 +233,6 @@
     .mode-preview img {
         transition: clip-path 0.5s linear;
         aspect-ratio: 16/10;
+        object-fit: cover;
     }
 </style>

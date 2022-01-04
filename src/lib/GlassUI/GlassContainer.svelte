@@ -5,7 +5,7 @@
 </script>
 
 <div class="glass-wrapper" class:fill>
-    <Glass>
+    <Glass {fill}>
         <div class="glass-container">
             <slot />
         </div>
@@ -14,17 +14,18 @@
 
 <style>
     .glass-wrapper {
-        width: fit-content;
         border-radius: var(--g-input-border-radius);
         overflow: hidden;
         isolation: isolate;
     }
 
-    .glass-container {
-        padding: .75em;
+    .glass-wrapper.fill,
+    .fill .glass-container {
+        width: 100%;
+        height: 100%;
     }
 
-    .fill.glass-wrapper {
-        width: 100%;
+    .glass-container {
+        padding: .75em;
     }
 </style>

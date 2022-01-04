@@ -17,15 +17,17 @@
 </Card>
 <Modal idealWidth="fit-content" bind:active={modalActive}>
     <div class="modal-content">
-    <Card {text}>
-        <BeforeAfterImage mode={"compare"} beforeSrc={image.before} afterSrc={image.after} />
-    </Card>
-</div>
+        <Card {text}>
+            <BeforeAfterImage mode={"compare"} beforeSrc={image.before} afterSrc={image.after} />
+        </Card>
+    </div>
 </Modal>
 
 <style>
     .modal-content {
-        max-height: calc(100vh - 4em);
-        width: min(calc(100vw - 2em), 70em)
+        display: flex;
+        justify-content: center;
+        width: min(calc(100vw - 2em), 80em);
+        height: min(calc(100vh - 4em), 50em);
     }
 </style>

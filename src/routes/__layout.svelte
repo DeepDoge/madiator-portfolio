@@ -17,7 +17,7 @@
 			</Glass>
 
 			<content>
-				{#if ($page.url.pathname ?? "/") !== "/"}
+				{#if ($page.url.pathname || "/") !== "/"}
 					<a class="home-button" href="/">Home</a>
 				{/if}
 				<slot />

@@ -24,9 +24,15 @@
     .card {
         display: grid;
         width: 100%;
-        grid-auto-flow: row;
+        grid-template-rows: 1fr auto;
         justify-items: center;
         gap: 0.25em;
+    }
+
+    .image-wrapper {
+        display: block;
+        width: 100%;
+        height: 100%;
     }
 
     p {
