@@ -39,7 +39,7 @@
         const rect = containerElement.getBoundingClientRect();
         const currentScale = scale
         scale += event.deltaY * -0.005;
-        scale = Math.min(Math.max(1, scale), 4);
+        scale = Math.min(Math.max(1, scale), 10);
         if (event.deltaY < 0) {
             const localX = event.x - rect.x;
             const localY = event.y - rect.y;
@@ -118,7 +118,6 @@
     .image {
         width: 100%;
         height: 100%;
-        transition: transform linear var(--transition-duration);
         transform: scale(var(--scale)) translate(var(--pos-x), var(--pos-y));
     }
 
@@ -134,7 +133,6 @@
     }
 
     .container:not(:active) .before {
-        transition: clip-path linear var(--transition-duration);
     }
     .container:not(:active) .slider {
         transition: left linear var(--transition-duration);

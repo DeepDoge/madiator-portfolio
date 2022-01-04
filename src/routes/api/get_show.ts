@@ -21,20 +21,21 @@ export const get: RequestHandler<Locals> = async (req: ServerRequest) =>
 {
     return await api(async () =>
     {
+        
         await mkdir(showsDirname, { recursive: true })
         const name = req.url.searchParams.get('name')
-        const showFiles = Object.fromEntries((await Promise.all((await readdir(`${showsDirname}/${name}`, { encoding: 'utf-8', withFileTypes: true }))
+        const showFiles = Object.fromEntries((await Promise.all((await readdir(`${showsDirname}/${name}/images`, { encoding: 'utf-8', withFileTypes: true }))
             .filter((file) => file.isDirectory())
             .map(async (showDir) =>
             {
-                const filenames = await readdir(`${showsDirname}/${name}/${showDir.name}`)
+                const filenames = await readdir(`${showsDirname}/${name}/images/${showDir.name}`)
                 const beforeName = filenames.find((filename) => filename.startsWith('before.'))
                 const afterName = filenames.find((filename) => filename.startsWith('after.'))
                 if (!beforeName || !afterName) return null
                 return [showDir.name, {
                     image: {
-                        before: `${showsDirnamePublic}/${name}/${showDir.name}/${beforeName}`,
-                        after: `${showsDirnamePublic}/${name}/${showDir.name}/${afterName}`
+                        before: `${showsDirnamePublic}/${name}/images/${showDir.name}/${beforeName}`,
+                        after: `${showsDirnamePublic}/${name}/images/${showDir.name}/${afterName}`
                     }
                 }]
             }))).filter((show) => show))
