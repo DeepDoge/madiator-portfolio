@@ -207,7 +207,7 @@
         opacity: 0.5;
         transition-property: left, opacity;
         transition-timing-function: linear;
-        transition-duration: 0.5s;
+        transition-duration: var(--transition-duration);
     }
 
     .mode-preview .slider::before,
@@ -220,7 +220,7 @@
     }
 
     .mode-preview .image {
-        transition: transform 0.25s linear;
+        transition: transform var(--transition-duration) linear;
         transform: scale(1);
     }
 
@@ -229,7 +229,7 @@
     }
 
     .mode-preview img {
-        transition: clip-path 0.5s linear;
+        transition: clip-path var(--transition-duration) linear;
         aspect-ratio: 16/10;
         object-fit: cover;
     }
