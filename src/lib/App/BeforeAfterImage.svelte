@@ -107,7 +107,6 @@
 <style>
     .container {
         --transition-duration: .1s;
-        aspect-ratio: 16/9;
         position: relative;
         isolation: isolate;
         overflow: hidden;
@@ -228,5 +227,6 @@
 
     .mode-preview img {
         transition: clip-path 0.5s linear;
+        aspect-ratio: 16/10;
     }
 </style>

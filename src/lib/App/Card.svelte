@@ -27,7 +27,6 @@
         grid-auto-flow: row;
         justify-items: center;
         gap: 0.25em;
-        max-height: calc(100vh - 5em);
     }
 
     p {
