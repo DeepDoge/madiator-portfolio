@@ -8,9 +8,9 @@ export const handle: Handle = async ({ request, resolve }) =>
 	request.locals.deviceId = cookies.deviceid || makeid(16)
 
 	// TODO https://github.com/sveltejs/kit/issues/1046
-	if (request.query.has('_method'))
+	if (request.url.searchParams.has('_method'))
 	{
-		request.method = request.query.get('_method').toUpperCase()
+		request.method = request.url.searchParams.get('_method').toUpperCase()
 	}
 
 	const response = await resolve(request)

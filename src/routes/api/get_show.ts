@@ -20,7 +20,7 @@ export const get: RequestHandler<Locals> = async (req: ServerRequest) =>
 {
     return await api(async () =>
     {
-        const name = req.query.get('name')
+        const name = req.url.searchParams.get('name')
         const showFiles = Object.fromEntries((await new Promise<Dirent[]>((resolve, reject) => 
             readdir(`./static/shows/${name}`, { encoding: 'utf-8', withFileTypes: true }, (err, files) => err ? reject(err) : resolve(files))))
             .filter((file) => file.isDirectory())

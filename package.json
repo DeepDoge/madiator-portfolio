@@ -11,9 +11,12 @@
   "devDependencies": {
     "@fontsource/fira-mono": "^4.2.2",
     "@lukeed/uuid": "^2.0.0",
+    "@sveltejs/adapter-node": "^1.0.0-next.60",
     "@sveltejs/kit": "next",
+    "@types/big.js": "^6.1.1",
     "@types/cookie": "^0.4.0",
     "@types/object-hash": "^2.1.0",
+    "big.js": "^6.1.1",
     "cookie": "^0.4.1",
     "mysql2": "^2.2.5",
     "object-hash": "^2.2.0",
@@ -24,10 +27,7 @@
     "svelte-intersection-observer": "^0.7.0",
     "svelte-preprocess": "^4.0.0",
     "tslib": "^2.0.0",
-    "typescript": "^4.0.0",
-    "@types/big.js": "^6.1.1",
-    "big.js": "^6.1.1"
+    "typescript": "^4.0.0"
   },
-  "type": "module",
-  "dependencies": {}
+  "type": "module"
 }

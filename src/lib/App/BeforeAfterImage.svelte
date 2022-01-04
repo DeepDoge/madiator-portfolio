@@ -65,6 +65,20 @@
         const maxY = -(rect.height / 2) / scale + rect.height / 2;
         positionY = Math.min(Math.max(minY, positionY), maxY)
     }
+
+    function keyPress(event: KeyboardEvent) {
+        switch (event.key) {
+            case "a":
+            case "ArrowLeft":
+                progress -= 10;
+                break;
+            case "d":
+            case "ArrowRight":
+                progress += 10;
+                break;
+        }
+        progress = Math.min(Math.max(0, progress), 100)
+    }
 </script>
 
 <div
@@ -76,6 +90,7 @@
     on:click={mouse}
     on:touchmove={mouse}
     on:mousewheel|preventDefault={mouseWheel}
+    on:keydown={keyPress}
     tabindex="-1"
     bind:this={containerElement}
 >
@@ -91,7 +106,7 @@
 
 <style>
     .container {
-        --progress: 50%;
+        --transition-duration: .1s;
         aspect-ratio: 16/9;
         position: relative;
         isolation: isolate;
@@ -102,7 +117,7 @@
     .image {
         width: 100%;
         height: 100%;
-        transition: transform linear 0.1s;
+        transition: transform linear var(--transition-duration);
         transform: scale(var(--scale)) translate(var(--pos-x), var(--pos-y));
     }
 
@@ -117,6 +132,13 @@
         pointer-events: none;
     }
 
+    .container:not(:active) .before {
+        transition: clip-path linear var(--transition-duration);
+    }
+    .container:not(:active) .slider {
+        transition: left linear var(--transition-duration);
+    }
+    
     .before {
         position: absolute;
         inset: 0;
