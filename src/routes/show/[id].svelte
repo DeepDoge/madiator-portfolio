@@ -22,7 +22,7 @@
 </svelte:head>
 
 <div class="show">
-    <h1><b>Show:</b> {showName}</h1>
+    <h1><b>Show:</b> <span>{showName}</span></h1>
     {#if show}
         <Row idealSize="30em" gap="1.5em">
             <!-- intead of index im gonna use id later as key -->
@@ -40,7 +40,7 @@
         gap: 2em;
     }
 
-    h1 {
+    h1 span {
         text-transform: capitalize;
     }
 </style>
