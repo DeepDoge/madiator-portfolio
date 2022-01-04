@@ -36,52 +36,32 @@
     let positionY: number = 0;
 
     function mouseWheel(event: WheelEvent) {
+        const rect = containerElement.getBoundingClientRect();
+        const currentScale = scale;
         scale += event.deltaY * -0.001;
         scale = Math.min(Math.max(1, scale), 4);
-        const rect = containerElement.getBoundingClientRect();
-        const halfWidth = rect.width / 2;
-        const halfHeight = rect.height / 2;
         const localX = event.x - rect.x;
         const localY = event.y - rect.y;
-        const localXFromCenter = localX - halfWidth;
-        const localYFromCenter = localY - halfHeight;
-        const localXOnImageFromCenter = localXFromCenter / scale - positionX;
-        const localYOnImageFromCenter = localYFromCenter / scale - positionY;
-        const currentCenterX = -positionX;
-        const currentCenterY = -positionY;
+        const localXFromCenter = localX - rect.width / 2;
+        const localYFromCenter = localY - rect.height / 2;
+        const localXOnImageFromCenter = localXFromCenter / currentScale - positionX;
+        const localYOnImageFromCenter = localYFromCenter / currentScale - positionY;
+        const localXOnImageFromCenterNext = localXFromCenter / scale - positionX;
+        const localYOnImageFromCenterNext = localYFromCenter / scale - positionY;
 
-        const vectorX = -(localXOnImageFromCenter - currentCenterX) / scale / 10;
-        const vectorY = -(localYOnImageFromCenter - currentCenterY) / scale / 10;
+        const vectorX = localXOnImageFromCenterNext - localXOnImageFromCenter;
+        const vectorY = localYOnImageFromCenterNext - localYOnImageFromCenter;
 
         positionX += vectorX;
         positionY += vectorY;
 
         const minX = rect.width / 2 / scale - rect.width / 2;
         const maxX = -(rect.width / 2) / scale + rect.width / 2;
-        if (positionX < minX) positionX = minX;
-        if (positionX > maxX) positionX = maxX;
+        positionX = Math.min(Math.max(minX, positionX), maxX);
 
         const minY = rect.height / 2 / scale - rect.height / 2;
         const maxY = -(rect.height / 2) / scale + rect.height / 2;
-        if (positionY < minY) positionY = minY;
-        if (positionY > maxY) positionY = maxY;
-    }
-
-    function debugWithKey(event: KeyboardEvent) {
-        switch (event.key) {
-            case "ArrowLeft":
-                positionX += 10;
-                break;
-            case "ArrowRight":
-                positionX -= 10;
-                break;
-            case "ArrowUp":
-                positionY -= 10;
-                break;
-            case "ArrowDown":
-                positionY += 10;
-                break;
-        }
+        positionY = Math.min(Math.max(minY, positionY), maxY);
     }
 </script>
 
@@ -94,7 +74,6 @@
     on:click={mouse}
     on:touchmove={mouse}
     on:mousewheel|preventDefault={mouseWheel}
-    on:keydown={debugWithKey}
     tabindex="-1"
     bind:this={containerElement}
 >
