@@ -16,11 +16,16 @@ export const get: RequestHandler<Locals> = async (req: ServerRequest) =>
     return await api(async () =>
     {
         await mkdir(showsDirname, { recursive: true })
-        const showFiles = await readdir(showsDirname, { encoding: 'utf-8', withFileTypes: true })
+        const showNames = await readdir(showsDirname)
 
-        return showFiles.map((file) => ({
-            name: file.name,
-            thumbnail: `${showsDirnamePublic}/${file.name}/thumbnail.jpg`
-        } as ShowInfo))
+        return (await Promise.all(showNames.map(async (showName) =>
+        {
+            const thumbnailName = (await readdir(`${showsDirname}/${showName}`)).find((file) => file.startsWith('thumbnail.'))
+            if (!thumbnailName) return null
+            return {
+                name: showName,
+                thumbnail: `${showsDirnamePublic}/${showName}/${thumbnailName}`
+            } as ShowInfo
+        }))).filter((showInfo) => showInfo)
     })
 }
