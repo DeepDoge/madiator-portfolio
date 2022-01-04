@@ -1,7 +1,7 @@
 import type { Locals } from "$lib/types"
 import type { RequestHandler } from "@sveltejs/kit"
 import type { ServerRequest } from "@sveltejs/kit/types/hooks"
-import { Dirent, readdir, mkdir } from "fs"
+import { readdir, mkdir } from "fs/promises"
 import { api } from "./_api"
 
 export interface Show
@@ -20,17 +20,22 @@ export const get: RequestHandler<Locals> = async (req: ServerRequest) =>
 {
     return await api(async () =>
     {
-        await new Promise((r) => mkdir('./static/shows', r))
+        const showsDirname = './static/shows' 
+        const showsDirnamePublic = '/shows'
+        await mkdir(showsDirname)
         const name = req.url.searchParams.get('name')
-        const showFiles = Object.fromEntries((await new Promise<Dirent[]>((resolve, reject) => 
-            readdir(`./static/shows/${name}`, { encoding: 'utf-8', withFileTypes: true }, (err, files) => err ? reject(err) : resolve(files))))
+        const showFiles = Object.fromEntries(await Promise.all((await readdir(`${showsDirname}/${name}`, { encoding: 'utf-8', withFileTypes: true }))
             .filter((file) => file.isDirectory())
-            .map((file) => ([file.name, {
-                image: {
-                    before: `/shows/${name}/${file.name}/before.jpg`,
-                    after: `/shows/${name}/${file.name}/after.jpg`
-                }
-            }])))
+            .map(async (showDir) =>
+            {
+                const filenames = await readdir(`${showsDirname}/${showDir.name}`)
+                return [showDir.name, {
+                    image: {
+                        before: `${showsDirnamePublic}/${name}/${showDir.name}/${filenames.find((filename) => filename.startsWith('before.'))}`,
+                        after: `${showsDirnamePublic}/${name}/${showDir.name}/${filenames.find((filename) => filename.startsWith('after.'))}`
+                    }
+                }]
+            })))
 
         return {
             name,
