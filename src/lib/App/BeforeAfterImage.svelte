@@ -37,31 +37,33 @@
 
     function mouseWheel(event: WheelEvent) {
         const rect = containerElement.getBoundingClientRect();
-        const currentScale = scale;
-        scale += event.deltaY * -0.001;
+        const currentScale = scale
+        scale += event.deltaY * -0.005;
         scale = Math.min(Math.max(1, scale), 4);
-        const localX = event.x - rect.x;
-        const localY = event.y - rect.y;
-        const localXFromCenter = localX - rect.width / 2;
-        const localYFromCenter = localY - rect.height / 2;
-        const localXOnImageFromCenter = localXFromCenter / currentScale - positionX;
-        const localYOnImageFromCenter = localYFromCenter / currentScale - positionY;
-        const localXOnImageFromCenterNext = localXFromCenter / scale - positionX;
-        const localYOnImageFromCenterNext = localYFromCenter / scale - positionY;
+        if (event.deltaY < 0) {
+            const localX = event.x - rect.x;
+            const localY = event.y - rect.y;
+            const localXFromCenter = localX - rect.width / 2;
+            const localYFromCenter = localY - rect.height / 2;
+            const localXOnImageFromCenter = localXFromCenter / currentScale - positionX;
+            const localYOnImageFromCenter = localYFromCenter / currentScale - positionY;
+            const localXOnImageFromCenterNext = localXFromCenter / scale - positionX;
+            const localYOnImageFromCenterNext = localYFromCenter / scale - positionY;
 
-        const vectorX = localXOnImageFromCenterNext - localXOnImageFromCenter;
-        const vectorY = localYOnImageFromCenterNext - localYOnImageFromCenter;
+            const vectorX = localXOnImageFromCenterNext - localXOnImageFromCenter;
+            const vectorY = localYOnImageFromCenterNext - localYOnImageFromCenter
 
-        positionX += vectorX;
-        positionY += vectorY;
+            positionX += vectorX;
+            positionY += vectorY;
+        }
 
         const minX = rect.width / 2 / scale - rect.width / 2;
         const maxX = -(rect.width / 2) / scale + rect.width / 2;
-        positionX = Math.min(Math.max(minX, positionX), maxX);
+        positionX = Math.min(Math.max(minX, positionX), maxX)
 
         const minY = rect.height / 2 / scale - rect.height / 2;
         const maxY = -(rect.height / 2) / scale + rect.height / 2;
-        positionY = Math.min(Math.max(minY, positionY), maxY);
+        positionY = Math.min(Math.max(minY, positionY), maxY)
     }
 </script>
 
