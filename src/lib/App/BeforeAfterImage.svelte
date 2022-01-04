@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
     import Ripple from "$lib/GlassUI/Ripple.svelte";
+    import { onDestroy, onMount } from "svelte";
     import { writable } from "svelte/store";
 
     export type BeforeAfterMode = "preview" | "compare";
@@ -29,26 +30,82 @@
         const localX = (event instanceof MouseEvent ? event.x : event.touches[0].pageX) - rect.x;
         progress = (localX / rect.width) * 100;
     }
+
+    let scale: number = 1;
+    let positionX: number = 0;
+    let positionY: number = 0;
+
+    function mouseWheel(event: WheelEvent) {
+        scale += event.deltaY * -0.001;
+        scale = Math.min(Math.max(1, scale), 4);
+        const rect = containerElement.getBoundingClientRect();
+        const halfWidth = rect.width / 2;
+        const halfHeight = rect.height / 2;
+        const localX = event.x - rect.x;
+        const localY = event.y - rect.y;
+        const localXFromCenter = localX - halfWidth;
+        const localYFromCenter = localY - halfHeight;
+        const localXOnImageFromCenter = localXFromCenter / scale - positionX;
+        const localYOnImageFromCenter = localYFromCenter / scale - positionY;
+        const currentCenterX = -positionX;
+        const currentCenterY = -positionY;
+
+        const vectorX = -(localXOnImageFromCenter - currentCenterX) / scale / 10;
+        const vectorY = -(localYOnImageFromCenter - currentCenterY) / scale / 10;
+
+        positionX += vectorX;
+        positionY += vectorY;
+
+        const minX = rect.width / 2 / scale - rect.width / 2;
+        const maxX = -(rect.width / 2) / scale + rect.width / 2;
+        if (positionX < minX) positionX = minX;
+        if (positionX > maxX) positionX = maxX;
+
+        const minY = rect.height / 2 / scale - rect.height / 2;
+        const maxY = -(rect.height / 2) / scale + rect.height / 2;
+        if (positionY < minY) positionY = minY;
+        if (positionY > maxY) positionY = maxY;
+    }
+
+    function debugWithKey(event: KeyboardEvent) {
+        switch (event.key) {
+            case "ArrowLeft":
+                positionX += 10;
+                break;
+            case "ArrowRight":
+                positionX -= 10;
+                break;
+            case "ArrowUp":
+                positionY -= 10;
+                break;
+            case "ArrowDown":
+                positionY += 10;
+                break;
+        }
+    }
 </script>
 
 <div
     class="container"
     class:mode-preview={mode === "preview"}
     class:mode-compare={mode === "compare"}
-    style="--progress:{progress}%"
+    style="--progress:{progress}%;--scale:{scale};--pos-x:{positionX}px;--pos-y:{positionY}px"
     on:mousemove={mouse}
     on:click={mouse}
     on:touchmove={mouse}
+    on:mousewheel|preventDefault={mouseWheel}
+    on:keydown={debugWithKey}
+    tabindex="-1"
     bind:this={containerElement}
 >
     <div class="image">
         <img class="before" src={beforeSrc} alt={null} />
         <img class="after" src={afterSrc} alt={null} />
-        <div class="slider" />
-        {#if mode === "preview"}
-            <Ripple />
-        {/if}
     </div>
+    <div class="slider" />
+    {#if mode === "preview"}
+        <Ripple />
+    {/if}
 </div>
 
 <style>
@@ -64,6 +121,8 @@
     .image {
         width: 100%;
         height: 100%;
+        transition: transform linear 0.1s;
+        transform: scale(var(--scale)) translate(var(--pos-x), var(--pos-y));
     }
 
     img {
