@@ -144,6 +144,7 @@
         --on-image: calc(var(--from-center) / var(--scale) - var(--pos-x));
         --v: calc(var(--on-image) + 50%);
         clip-path: polygon(var(--v) 0%, 100% 0%, 100% 100%, var(--v) 100%);
+        backdrop-filter: saturate(0) blur(3px);
     }
 
     .slider {
@@ -220,11 +221,10 @@
 
     .mode-preview .image {
         transition: transform var(--transition-duration) linear;
-        transform: scale(1);
     }
 
-    .mode-preview:hover .image {
-        transform: scale(1.05);
+    .mode-preview:hover.container {
+        --scale: 1.05 !important;
     }
 
     .mode-preview img {
