@@ -141,7 +141,10 @@
     .before {
         position: absolute;
         inset: 0;
-        clip-path: polygon(0% 0%, var(--progress) 0%, var(--progress) 100%, 0% 100%);
+        --from-center: calc(var(--progress) - 50%);
+        --on-image: calc(var(--from-center) / var(--scale) - var(--pos-x));
+        --v: calc(var(--on-image) + 50%);
+        clip-path: polygon(0% 0%, var(--v) 0%, var(--v) 100%, 0% 100%);
     }
 
     .slider {
