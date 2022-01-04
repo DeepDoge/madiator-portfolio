@@ -1,7 +1,7 @@
 import type { Locals } from "$lib/types"
 import type { RequestHandler } from "@sveltejs/kit"
 import type { ServerRequest } from "@sveltejs/kit/types/hooks"
-import { Dirent, readdir } from "fs"
+import { Dirent, readdir, mkdir } from "fs"
 import { api } from "./_api"
 
 export interface ShowInfo
@@ -14,6 +14,7 @@ export const get: RequestHandler<Locals> = async (req: ServerRequest) =>
 {
     return await api(async () =>
     {
+        await new Promise((r) => mkdir('./static/shows', r))
         const showFiles = await new Promise<Dirent[]>((resolve, reject) => 
             readdir(`./static/shows`, { encoding: 'utf-8', withFileTypes: true }, (err, files) => err ? reject(err) : resolve(files)))
 
