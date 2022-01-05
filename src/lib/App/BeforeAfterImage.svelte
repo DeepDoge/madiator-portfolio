@@ -116,7 +116,7 @@
         {/if}
     </div>
     <div class="overlay after-overlay">
-        {#if afterLoading || true}
+        {#if afterLoading}
             <Loading />
         {/if}
     </div>
