@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
     import Ripple from "$lib/GlassUI/Ripple.svelte";
-import { onDestroy } from "svelte";
+    import { onDestroy } from "svelte";
     import { writable } from "svelte/store";
 
     export type BeforeAfterMode = "preview" | "compare";
@@ -17,6 +17,8 @@ import { onDestroy } from "svelte";
 </script>
 
 <script lang="ts">
+    import Image from "$lib/GlassUI/Image.svelte";
+
     import Loading from "./Loading.svelte";
 
     export let beforeSrc: string = null;
@@ -44,14 +46,6 @@ import { onDestroy } from "svelte";
 
     $: beforeSrc && (beforeLoaded = false);
     $: afterSrc && (afterLoaded = false);
-
-    let afterImageElement: HTMLImageElement = null
-    let beforeImageElement: HTMLImageElement = null
-
-    onDestroy(() => {
-        afterImageElement?.removeAttribute('src')
-        beforeImageElement?.removeAttribute('src')
-    })
 
     function mouseWheel(event: WheelEvent) {
         if (mode === "preview") return;
@@ -117,9 +111,13 @@ import { onDestroy } from "svelte";
     tabindex="-1"
     bind:this={containerElement}
 >
-    <div class="image">
-        <img bind:this={beforeImageElement} class="before" src={beforeSrc} alt={null} on:load={() => (beforeLoaded = true)}  />
-        <img bind:this={afterImageElement} class="after" src={afterSrc} alt={null} on:load={() => (afterLoaded = true)} />
+    <div class="images">
+        <div class="before image">
+            <Image src={beforeSrc} fit={mode === 'preview' ? 'cover' : 'contain'} on:load={() => (beforeLoaded = true)} />
+        </div>
+        <div class="after image">
+            <Image src={afterSrc} fit={mode === 'preview' ? 'cover' : 'contain'} on:load={() => (afterLoaded = true)} />
+        </div>
     </div>
     <div class="overlay before-overlay">
         {#if !beforeLoaded}
@@ -170,20 +168,17 @@ import { onDestroy } from "svelte";
         display: none;
     }
 
-    .image {
+    .images {
         width: 100%;
         height: 100%;
         transform: scale(var(--scale)) translate(var(--pos-x), var(--pos-y));
     }
 
-    img {
-        object-position: center;
-        object-fit: contain;
-        width: 100%;
+    .image {
         height: 100%;
     }
 
-    .container.mouse-down img {
+    .container.mouse-down .image {
         pointer-events: none;
     }
 
@@ -197,7 +192,7 @@ import { onDestroy } from "svelte";
         clip-path: polygon(var(--progress-on-image) 0%, 100% 0%, 100% 100%, var(--progress-on-image) 100%);
     }
 
-    .after-loading .after {
+    .after-loading .after{
         backdrop-filter: saturate(0) blur(3px);
     }
 
@@ -273,7 +268,7 @@ import { onDestroy } from "svelte";
         opacity: 1;
     }
 
-    .mode-preview .image {
+    .mode-preview .images {
         transition: transform var(--transition-duration) linear;
     }
 
@@ -281,9 +276,8 @@ import { onDestroy } from "svelte";
         --scale: 1.05 !important;
     }
 
-    .mode-preview img {
+    .mode-preview .image {
         transition: clip-path var(--transition-duration) linear;
         aspect-ratio: 16/10;
-        object-fit: cover;
     }
 </style>

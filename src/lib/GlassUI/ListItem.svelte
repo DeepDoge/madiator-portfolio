@@ -1,5 +1,6 @@
 <script lang="ts">
     import GlassElementBackground from "./GlassElementBackground.svelte";
+import Image from "./Image.svelte";
     import Ripple from "./Ripple.svelte";
 
     export let photoSrc: string = null;
@@ -9,14 +10,14 @@
     export let href: string = null;
 </script>
 
-<a class="container" on:click on:focus on:mouseout on:mouseover {href}>
+<a class="container" on:click on:focus on:mouseout on:mouseover on:blur {href}>
     <div class="inner" class:compact>
         <Ripple />
         <GlassElementBackground />
         {#if !hidePhoto}
             <div class="photo">
                 {#if photoSrc}
-                    <img src={photoSrc} alt={title} />
+                    <Image src={photoSrc} alt={title} />
                 {/if}
             </div>
         {/if}

@@ -10,6 +10,7 @@
 
 <script lang="ts">
 	import Loading from "$lib/App/Loading.svelte";
+	import Image from "$lib/GlassUI/Image.svelte";
 
 	let showInfos: ShowInfo[] = null;
 	if (typeof window !== "undefined") GetShows().then((r) => (showInfos = r));
@@ -27,7 +28,9 @@
 			{#each showInfos as showInfo (showInfo.name)}
 				<a class="show-info" href="/show/{showInfo.name}">
 					<Card text={showInfo.name}>
-						<img src={ToResizedPath(showInfo.thumbnail, 500)} alt={showInfo.name} />
+						<div class="image">
+							<Image src={ToResizedPath(showInfo.thumbnail, 500)} alt={showInfo.name} />
+						</div>
 					</Card>
 				</a>
 			{/each}
@@ -49,9 +52,7 @@
 		width: 100%;
 	}
 
-	img {
-		object-fit: contain;
-		object-position: center;
+	.image {
 		width: 100%;
 		height: 100%;
 		aspect-ratio: 16/10;
