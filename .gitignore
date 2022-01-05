@@ -3,6 +3,5 @@ node_modules
 /.svelte-kit
 /package
 /src/secret.ts
-/static/shows/*
-/static/resized
+/content
 /build
