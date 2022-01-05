@@ -14,6 +14,13 @@ const config = {
 		target: '#svelte',
 		vite:
 		{
+			server: {
+				fs: {
+					allow: [
+						path.resolve('./content')
+					]
+				}
+			},
 			resolve:
 			{
 				alias:

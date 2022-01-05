@@ -1,6 +1,8 @@
 import type { Handle } from '@sveltejs/kit'
 import cookie from 'cookie'
 import { makeid } from '../modules/makeid'
+import { readFile } from 'fs/promises'
+import path from 'path'
 import { ResizeImageHook } from './plugins/resize/hook'
 
 export const handle: Handle = async ({ request, resolve }) =>
@@ -16,6 +18,17 @@ export const handle: Handle = async ({ request, resolve }) =>
 
 	const resizeResult = await ResizeImageHook(request, resolve)
 	if (resizeResult) return resizeResult
+
+
+	if (request.method === 'GET' && request.url.pathname.startsWith('/content'))
+	{
+		console.log(request.url.pathname)
+		return {
+			status: 200,
+			headers: {},
+			body: await readFile(path.resolve(path.join('.', decodeURIComponent(request.url.pathname))))
+		}
+	}
 
 	const response = await resolve(request)
 

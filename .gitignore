@@ -5,3 +5,4 @@ node_modules
 /src/secret.ts
 /content
 /build
+/cache

@@ -1,2 +1,2 @@
 export const showsDirname = './content/shows'
-export const showsDirnamePublic = '/shows'
+export const showsDirnamePublic = '/content/shows'

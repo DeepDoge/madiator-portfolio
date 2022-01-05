@@ -17,11 +17,11 @@ export async function ResizeImageHook(
         // /Foo/Bar/ScreenShots /Screenshot /500 .jpg
         // /Foo/Bar/ScreenShots /Screenshot .jpg
         const requestPath = decodeURIComponent(request.url.pathname)
-        const cacheFilename = path.join('./content', requestPath)
+        const requestFilename = path.join('./cache', requestPath)
 
-        if (!existsSync(cacheFilename))
+        if (!existsSync(requestFilename))
         {
-            const cacheDirname = path.dirname(cacheFilename)
+            const requestDirname = path.dirname(requestFilename)
             const fileExtName = path.extname(requestPath)
             const quality = parseInt(path.basename(requestPath, fileExtName))
             switch (quality)
@@ -30,17 +30,17 @@ export async function ResizeImageHook(
                 default: throw new Error(`Quality: ${quality} is unexpected.`)
             }
             const originalPath = `${path.dirname(requestPath).substring(`/${resizedImagePathPrefix}/`.length)}${fileExtName}`
-            const originalFilename = path.join('./content', originalPath)
-            
+            const originalFilename = path.join('.', originalPath)
+
             if (!existsSync(originalFilename)) return
 
-            await mkdir(cacheDirname, { recursive: true })
+            await mkdir(requestDirname, { recursive: true })
             const modifiedJimpObject = await Jimp.read(originalFilename).then((value) =>
                 value.getWidth() > value.getHeight() ?
                     value.resize(quality, Jimp.AUTO) :
                     value.resize(Jimp.AUTO, quality)
             )
-            await modifiedJimpObject.writeAsync(cacheFilename)
+            await modifiedJimpObject.writeAsync(requestFilename)
         }
 
         return {
@@ -48,7 +48,7 @@ export async function ResizeImageHook(
             headers: {
 
             },
-            body: await readFile(cacheFilename)
+            body: await readFile(requestFilename)
         }
     }
 }
