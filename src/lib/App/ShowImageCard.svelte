@@ -12,7 +12,7 @@
 <Card on:click={() => (modalActive = true)} {text}>
     <BeforeAfterImage mode={"preview"} beforeSrc={ToResizedPath(image.before, 200)} afterSrc={ToResizedPath(image.after, 500)} />
 </Card>
-<Modal idealWidth="fit-content" bind:active={modalActive}>
+<Modal bind:active={modalActive}>
     <div class="modal-content">
         <Card {text}>
             <BeforeAfterImage mode={"compare"} beforeSrc={image.before} afterSrc={image.after} />

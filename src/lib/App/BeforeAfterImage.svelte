@@ -109,16 +109,16 @@
     <div class="image">
         <img class="before" src={beforeSrc} alt={null} on:load={() => (beforeLoading = false)} />
         <img class="after" src={afterSrc} alt={null} on:load={() => (afterLoading = false)} />
-        <div class="overlay before-overlay">
-            {#if beforeLoading}
-                <Loading />
-            {/if}
-        </div>
-        <div class="overlay after-overlay">
-            {#if afterLoading}
-                <Loading />
-            {/if}
-        </div>
+    </div>
+    <div class="overlay before-overlay">
+        {#if beforeLoading}
+            <Loading />
+        {/if}
+    </div>
+    <div class="overlay after-overlay">
+        {#if afterLoading || true}
+            <Loading />
+        {/if}
     </div>
     <div class="slider" />
     {#if mode === "preview"}
@@ -129,6 +129,9 @@
 <style>
     .container {
         --transition-duration: 0.1s;
+        --progress-from-center: calc(var(--progress) - 50%);
+        --progress-on-image-from-center: calc(var(--progress-from-center) / var(--scale) - var(--pos-x));
+        --progress-on-image: calc(var(--progress-on-image-from-center) + 50%);
         width: 100%;
         height: 100%;
         position: relative;
@@ -157,7 +160,6 @@
     }
 
     .image {
-        position: relative;
         width: 100%;
         height: 100%;
         transform: scale(var(--scale)) translate(var(--pos-x), var(--pos-y));
@@ -181,10 +183,7 @@
     .after {
         position: absolute;
         inset: 0;
-        --from-center: calc(var(--progress) - 50%);
-        --on-image: calc(var(--from-center) / var(--scale) - var(--pos-x));
-        --v: calc(var(--on-image) + 50%);
-        clip-path: polygon(var(--v) 0%, 100% 0%, 100% 100%, var(--v) 100%);
+        clip-path: polygon(var(--progress-on-image) 0%, 100% 0%, 100% 100%, var(--progress-on-image) 100%);
     }
 
     .after-loading .after {
