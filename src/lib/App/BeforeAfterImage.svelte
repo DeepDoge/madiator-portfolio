@@ -178,13 +178,17 @@
         transition: left linear var(--transition-duration);
     }
 
-    .before {
+    .after {
         position: absolute;
         inset: 0;
         --from-center: calc(var(--progress) - 50%);
         --on-image: calc(var(--from-center) / var(--scale) - var(--pos-x));
         --v: calc(var(--on-image) + 50%);
-        clip-path: polygon(var(--v) 0%, var(--v) 100%, 0% 100%, 0% 0%);
+        clip-path: polygon(var(--v) 0%, 100% 0%, 100% 100%, var(--v) 100%);
+    }
+
+    .after-loading .after {
+        backdrop-filter: saturate(0) blur(3px);
     }
 
     .slider {
