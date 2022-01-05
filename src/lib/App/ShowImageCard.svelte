@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { ToResizedPath } from "$/plugins/resize/common";
+    import { GetChunkInfo, ToResizedPath } from "$/plugins/resize/common";
+    import type { ChunkedImageSrc } from "$lib/GlassUI/Image.svelte";
     import Modal from "$lib/GlassUI/Modal.svelte";
     import BeforeAfterImage from "./BeforeAfterImage.svelte";
     import Card from "./Card.svelte";
@@ -7,6 +8,28 @@
     export let image: { before: string; after: string } = null;
     export let text: string = null;
     let modalActive = false;
+
+    let afterChunkSrc: ChunkedImageSrc = null
+    $: GetChunkedImageSrc(image.after).then((value) => afterChunkSrc = value)
+    
+    async function GetChunkedImageSrc(src: string): Promise<ChunkedImageSrc>
+    {
+        const info = await GetChunkInfo(src, 360)
+        const images: ChunkedImageSrc['images'] = []
+        let areaLeft = info.height
+        for (let i = 0; i < info.images.length; i++)
+        {
+            images.push({
+                area: (areaLeft > info.chunkSize ? info.chunkSize : areaLeft) / info.height,
+                url: info.images[i]
+            })
+            areaLeft -= info.chunkSize
+        }
+        return {
+            images,
+            direction: 'vertical'
+        }
+    }
 </script>
 
 <Card on:click={() => (modalActive = true)} {text}>
@@ -15,7 +38,7 @@
 <Modal bind:active={modalActive}>
     <div class="modal-content">
         <Card {text}>
-            <BeforeAfterImage mode={"compare"} beforeSrc={image.before} afterSrc={image.after} />
+            <BeforeAfterImage mode={"compare"} beforeSrc={image.before} afterSrc={afterChunkSrc ?? image.before} />
         </Card>
     </div>
 </Modal>

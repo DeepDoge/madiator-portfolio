@@ -1,7 +1,8 @@
 <script context="module" lang="ts">
+    import Image, { ChunkedImageSrc } from "$lib/GlassUI/Image.svelte";
     import Ripple from "$lib/GlassUI/Ripple.svelte";
-    import { onDestroy } from "svelte";
     import { writable } from "svelte/store";
+    import Loading from "./Loading.svelte";
 
     export type BeforeAfterMode = "preview" | "compare";
 
@@ -17,12 +18,9 @@
 </script>
 
 <script lang="ts">
-    import Image from "$lib/GlassUI/Image.svelte";
-
-    import Loading from "./Loading.svelte";
-
-    export let beforeSrc: string = null;
-    export let afterSrc: string = null;
+    
+    export let beforeSrc: ChunkedImageSrc | string = null;
+    export let afterSrc: ChunkedImageSrc | string = null;
 
     export let mode: BeforeAfterMode;
 

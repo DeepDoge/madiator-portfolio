@@ -1,10 +1,11 @@
 import type { MaybePromise } from "@sveltejs/kit/types/helper"
 import type { ServerRequest, ServerResponse } from "@sveltejs/kit/types/hooks"
 import { existsSync } from 'fs'
-import { mkdir, readFile } from 'fs/promises'
+import { mkdir, readFile, writeFile } from 'fs/promises'
 import Jimp from 'jimp'
 import path from 'path'
-import { resizedImagePathPrefix } from "./common"
+import mime from 'mime'
+import { ImageChunkInfo, resizedImagePathPrefix } from "./common"
 
 type Locals = Record<string, any>
 export async function ResizeImageHook(
@@ -18,41 +19,106 @@ export async function ResizeImageHook(
         // /Foo/Bar/ScreenShots /Screenshot .jpg
         const requestPath = decodeURIComponent(request.url.pathname)
         const requestFilename = path.join('./cache', requestPath)
+        const requestDirname = path.dirname(requestFilename)
 
         if (!existsSync(requestFilename))
         {
-            const requestDirname = path.dirname(requestFilename)
-            const fileExtName = path.extname(requestPath)
-            const quality = parseInt(path.basename(requestPath, fileExtName))
+            const qualityString = path.basename(requestPath)
+            const quality: number | 'compress' | string = parseInt(qualityString) || qualityString as any
             switch (quality)
             {
-                case 720: case 500: case 200: case 50: case 0: break;
-                default: throw new Error(`Quality: ${quality} is unexpected.`)
+                case 'compress':
+                case 720: case 500: case 200: case 50: break
+                default:
+                    if (typeof quality === 'string')
+                    {
+                        if (quality.startsWith('chunk_')) break
+                    }
+                    throw new Error(`Quality: ${quality} is unexpected.`)
             }
-            const originalPath = `${path.dirname(requestPath).substring(`/${resizedImagePathPrefix}/`.length)}${fileExtName}`
+            const originalPath = `${path.dirname(requestPath).substring(`/${resizedImagePathPrefix}/`.length)}`
             const originalFilename = path.join('.', originalPath)
+            const originalFileExtension = path.extname(originalFilename)
 
             if (!existsSync(originalFilename)) return
 
             await mkdir(requestDirname, { recursive: true })
-            const modifiedJimpObject = await Jimp.read(originalFilename).then((value) =>
+            await Jimp.read(originalFilename).then(async (value) =>
             {
                 const width = value.getWidth()
                 const height = value.getHeight()
-                if (quality === 0) return value.quality(90)
-                if (quality > width && quality > height) return value
-                return width > height ?
-                    value.resize(quality, Jimp.AUTO) :
-                    value.resize(Jimp.AUTO, quality)
-            }
-            )
-            await modifiedJimpObject.writeAsync(requestFilename)
+                const imageDirection = width > height ? 'horizontal' : 'vertical'
+                switch (quality)
+                {
+                    case 'compress':
+                        await value.quality(90).writeAsync(requestFilename)
+                        break
+
+                    default:
+                        if (typeof quality === 'string')
+                        {
+                            if (quality.startsWith('chunk_'))
+                            {
+                                // chunk_360_0
+                                // chunk_360_1
+                                // chunk_360_info
+                                const parts = quality.split('_')
+                                const maxChunkSize = parseInt(parts[1])
+                                switch (maxChunkSize)
+                                {
+                                    case 360: break
+                                    default: throw new Error()
+                                }
+
+
+                                let pixelsLeft = height
+                                const chunkCount = Math.ceil(pixelsLeft / maxChunkSize)
+
+                                if (path[2] === 'info.json')
+                                {
+                                    const infoFilename = path.join(requestDirname, `chunk_${maxChunkSize}_info.json`)
+                                    const info: ImageChunkInfo = {
+                                        width,
+                                        height,
+                                        chunkCount
+                                    }
+                                    if (!existsSync(infoFilename)) await writeFile(infoFilename, JSON.stringify(info))
+                                }
+                                else 
+                                {
+                                    const requestedChunkI = parseInt(parts[2])
+                                    if (!(requestedChunkI < chunkCount)) throw new Error()
+
+                                    for (let chunkI = 0; chunkI < chunkCount; chunkI++)
+                                    {
+                                        const chunkSize = pixelsLeft > maxChunkSize ? maxChunkSize : pixelsLeft
+                                        pixelsLeft -= chunkSize
+
+                                        const chunkFilename = path.join(requestDirname, `chunk_${maxChunkSize}_${chunkI}`)
+                                        if (existsSync(chunkFilename)) continue
+                                        await value.clone().crop(0, maxChunkSize * chunkI, width, chunkSize).writeAsync(chunkFilename)
+                                    }
+                                }
+                            }
+                        }
+                        else if (quality > width && quality > height)
+                            await value.writeAsync(requestFilename)
+                        else
+                            await (imageDirection === 'horizontal' ?
+                                value.resize(quality, Jimp.AUTO) :
+                                value.resize(Jimp.AUTO, quality)
+                            ).writeAsync(requestFilename)
+                        break
+                }
+
+            })
         }
 
         return {
             status: 200,
             headers: {
-                "Cache-Control": "max-age=604800, must-revalidate"
+                "Cache-Control": "max-age=604800, must-revalidate",
+                "Content-Type": mime.getType(requestDirname)
             },
             body: await readFile(requestFilename)
         }
