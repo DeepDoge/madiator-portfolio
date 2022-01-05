@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
     import Ripple from "$lib/GlassUI/Ripple.svelte";
+import { onDestroy } from "svelte";
     import { writable } from "svelte/store";
 
     export type BeforeAfterMode = "preview" | "compare";
@@ -38,11 +39,19 @@
     let scale: number = 1;
     let positionX: number = 0;
     let positionY: number = 0;
-    let beforeLoading = false;
-    let afterLoading = false;
+    let beforeLoaded = false;
+    let afterLoaded = false;
 
-    $: beforeLoading = !!beforeSrc;
-    $: afterLoading = !!afterSrc;
+    $: beforeSrc && (beforeLoaded = false);
+    $: afterSrc && (afterLoaded = false);
+
+    let afterImageElement: HTMLImageElement = null
+    let beforeImageElement: HTMLImageElement = null
+
+    onDestroy(() => {
+        afterImageElement?.removeAttribute('src')
+        beforeImageElement?.removeAttribute('src')
+    })
 
     function mouseWheel(event: WheelEvent) {
         if (mode === "preview") return;
@@ -96,8 +105,8 @@
     class="container"
     class:mode-preview={mode === "preview"}
     class:mode-compare={mode === "compare"}
-    class:before-loading={beforeLoading}
-    class:after-loading={afterLoading}
+    class:before-loading={!beforeLoaded}
+    class:after-loading={!afterLoaded}
     class:mouse-down={$mouseDown}
     style="--progress:{progress}%;--scale:{scale};--pos-x:{positionX}px;--pos-y:{positionY}px"
     on:mousemove={mouse}
@@ -109,16 +118,16 @@
     bind:this={containerElement}
 >
     <div class="image">
-        <img class="before" src={beforeSrc} alt={null} on:load={() => (beforeLoading = false)} />
-        <img class="after" src={afterSrc} alt={null} on:load={() => (afterLoading = false)} />
+        <img bind:this={beforeImageElement} class="before" src={beforeSrc} alt={null} on:load={() => (beforeLoaded = true)}  />
+        <img bind:this={afterImageElement} class="after" src={afterSrc} alt={null} on:load={() => (afterLoaded = true)} />
     </div>
     <div class="overlay before-overlay">
-        {#if beforeLoading}
+        {#if !beforeLoaded}
             <Loading />
         {/if}
     </div>
     <div class="overlay after-overlay">
-        {#if afterLoading}
+        {#if !afterLoaded}
             <Loading />
         {/if}
     </div>
