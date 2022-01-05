@@ -35,7 +35,7 @@
 <style>
 	:global(:root)
 	{
-		font-size: max(1rem, .4vw);
+		font-size: max(1rem, min(1vw, 2vh));
 	}
 
 	.layout {
