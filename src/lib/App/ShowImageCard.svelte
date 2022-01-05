@@ -10,9 +10,9 @@
     let modalActive = false;
 
     let afterChunkSrc: ChunkedImageSrc = null
-    $: GetChunkedImageSrc(image.after).then((value) => afterChunkSrc = value)
+    $: modalActive && GetChunkedImageSrc(image.after)
     
-    async function GetChunkedImageSrc(src: string): Promise<ChunkedImageSrc>
+    async function GetChunkedImageSrc(src: string)
     {
         const info = await GetChunkInfo(src, 360)
         const images: ChunkedImageSrc['images'] = []
@@ -25,9 +25,13 @@
             })
             areaLeft -= info.chunkSize
         }
-        return {
+
+        if (!modalActive) return
+        afterChunkSrc = {
             images,
-            direction: 'vertical'
+            direction: 'vertical',
+            width: info.width,
+            height: info.height
         }
     }
 </script>

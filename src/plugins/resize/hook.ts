@@ -118,7 +118,7 @@ export async function ResizeImageHook(
             status: 200,
             headers: {
                 "Cache-Control": "max-age=604800, must-revalidate",
-                "Content-Type": mime.getType(requestDirname)
+                "Content-Type": mime.getType(requestFilename) ?? mime.getType(requestDirname)
             },
             body: await readFile(requestFilename)
         }
