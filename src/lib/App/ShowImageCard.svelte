@@ -23,7 +23,7 @@
         }
         else
         {
-            modalAbortController.abort()
+            modalAbortController?.abort()
         }
     }
 
