@@ -14,6 +14,8 @@
 </script>
 
 <script lang="ts">
+    import Loading from "./Loading.svelte";
+
     export let beforeSrc: string = null;
     export let afterSrc: string = null;
 
@@ -23,8 +25,9 @@
 
     let containerElement: HTMLDivElement;
     function mouse(event: MouseEvent | TouchEvent) {
-        if (mode === "compare") event.preventDefault();
+        if (mode === "preview") return;
         if (event instanceof MouseEvent && !$mouseDown) return;
+        event.preventDefault();
         const rect = containerElement.getBoundingClientRect();
         const localX = (event instanceof MouseEvent ? event.x : event.touches[0].pageX) - rect.x;
         progress = (localX / rect.width) * 100;
@@ -33,9 +36,15 @@
     let scale: number = 1;
     let positionX: number = 0;
     let positionY: number = 0;
+    let beforeLoading = false;
+    let afterLoading = false;
+
+    $: beforeLoading = !!beforeSrc;
+    $: afterLoading = !!afterSrc;
 
     function mouseWheel(event: WheelEvent) {
         if (mode === "preview") return;
+        event.preventDefault();
         const rect = containerElement.getBoundingClientRect();
         const currentScale = scale;
         scale += event.deltaY * -0.005;
@@ -85,19 +94,31 @@
     class="container"
     class:mode-preview={mode === "preview"}
     class:mode-compare={mode === "compare"}
+    class:before-loading={beforeLoading}
+    class:after-loading={afterLoading}
     class:mouse-down={$mouseDown}
     style="--progress:{progress}%;--scale:{scale};--pos-x:{positionX}px;--pos-y:{positionY}px"
     on:mousemove={mouse}
     on:click={mouse}
     on:touchmove={mouse}
-    on:mousewheel|preventDefault={mouseWheel}
+    on:mousewheel={mouseWheel}
     on:keydown={keyPress}
     tabindex="-1"
     bind:this={containerElement}
 >
     <div class="image">
-        <img class="before" src={beforeSrc} alt={null} />
-        <img class="after" src={afterSrc} alt={null} />
+        <img class="before" src={beforeSrc} alt={null} on:load={() => (beforeLoading = false)} />
+        <img class="after" src={afterSrc} alt={null} on:load={() => (afterLoading = false)} />
+        <div class="overlay before-overlay">
+            {#if beforeLoading}
+                <Loading />
+            {/if}
+        </div>
+        <div class="overlay after-overlay">
+            {#if afterLoading}
+                <Loading />
+            {/if}
+        </div>
     </div>
     <div class="slider" />
     {#if mode === "preview"}
@@ -116,7 +137,27 @@
         user-select: none;
     }
 
+    .overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+    }
+    .before-overlay {
+        right: calc(100% - var(--progress));
+    }
+    .after-overlay {
+        left: var(--progress);
+    }
+
+    .mode-preview .overlay {
+        display: none;
+    }
+
     .image {
+        position: relative;
         width: 100%;
         height: 100%;
         transform: scale(var(--scale)) translate(var(--pos-x), var(--pos-y));
@@ -144,6 +185,9 @@
         --on-image: calc(var(--from-center) / var(--scale) - var(--pos-x));
         --v: calc(var(--on-image) + 50%);
         clip-path: polygon(var(--v) 0%, 100% 0%, 100% 100%, var(--v) 100%);
+    }
+
+    .after-loading .after {
         backdrop-filter: saturate(0) blur(3px);
     }
 

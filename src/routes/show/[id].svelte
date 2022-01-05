@@ -9,6 +9,8 @@
 </script>
 
 <script lang="ts">
+    import Loading from "$lib/App/Loading.svelte";
+
     const name = $page.params.id;
     let showName: string = name;
     let show: Show = null;
@@ -29,6 +31,8 @@
                 <ShowImageCard image={show.images[imageKey].image} text={imageKey[0] === "_" ? null : imageKey} />
             {/each}
         </Row>
+    {:else}
+        <Loading />
     {/if}
 </div>
 

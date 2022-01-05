@@ -22,7 +22,6 @@ export const handle: Handle = async ({ request, resolve }) =>
 
 	if (request.method === 'GET' && request.url.pathname.startsWith('/content'))
 	{
-		console.log(request.url.pathname)
 		return {
 			status: 200,
 			headers: {},

@@ -9,7 +9,9 @@
 </script>
 
 <script lang="ts">
-	let showInfos: ShowInfo[] = [];
+	import Loading from "$lib/App/Loading.svelte";
+
+	let showInfos: ShowInfo[] = null;
 	if (typeof window !== "undefined") GetShows().then((r) => (showInfos = r));
 </script>
 
@@ -19,16 +21,20 @@
 
 <div class="shows">
 	<h1>Shows</h1>
-	<Row idealSize="30em" gap="1.5em">
-		<!-- intead of index im gonna use id later as key -->
-		{#each showInfos as showInfo (showInfo.name)}
-			<a class="show-info" href="/show/{showInfo.name}">
-				<Card text={showInfo.name}>
-					<img src={ToResizedPath(showInfo.thumbnail, 500)} alt={showInfo.name} />
-				</Card>
-			</a>
-		{/each}
-	</Row>
+	{#if showInfos}
+		<Row idealSize="30em" gap="1.5em">
+			<!-- intead of index im gonna use id later as key -->
+			{#each showInfos as showInfo (showInfo.name)}
+				<a class="show-info" href="/show/{showInfo.name}">
+					<Card text={showInfo.name}>
+						<img src={ToResizedPath(showInfo.thumbnail, 500)} alt={showInfo.name} />
+					</Card>
+				</a>
+			{/each}
+		</Row>
+	{:else}
+		<Loading />
+	{/if}
 </div>
 
 <style>
