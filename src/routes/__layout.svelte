@@ -33,6 +33,11 @@
 </GlassApp>
 
 <style>
+	:global(:root)
+	{
+		font-size: max(1rem, .4vw);
+	}
+
 	.layout {
 		position: relative;
 		isolation: isolate;
@@ -65,7 +70,7 @@
 
 	content {
 		display: block;
-		width: min(100em, 100%);
+		width: 100%;
 		padding: 1em;
 	}
 

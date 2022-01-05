@@ -8,6 +8,8 @@
     if (typeof window !== "undefined") {
         document.addEventListener("mousedown", (e) => e.button === 0 && mouseDown.set(true));
         document.addEventListener("mouseup", () => mouseDown.set(false));
+        document.addEventListener("touchstart", (e) => mouseDown.set(true));
+        document.addEventListener("touchend", () => mouseDown.set(false));
         document.addEventListener("blur", () => mouseDown.set(false));
         document.addEventListener("visibilitychange", () => mouseDown.set(false));
     }
@@ -176,7 +178,7 @@
         pointer-events: none;
     }
 
-    .container:not(:active) .slider {
+    .container:not(.mouse-down) .slider {
         transition: left linear var(--transition-duration);
     }
 

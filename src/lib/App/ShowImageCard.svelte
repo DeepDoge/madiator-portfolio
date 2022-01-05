@@ -24,7 +24,7 @@
     .modal-content {
         display: flex;
         justify-content: center;
-        width: min(calc(100vw - 2em), 80em);
-        height: min(calc(100vh - 4em), 50em);
+        width: min(100vw - 2em, 80em);
+        height: min(100vh - 4em, 50em);
     }
 </style>
