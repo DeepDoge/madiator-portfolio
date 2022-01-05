@@ -6,6 +6,7 @@
     let modalElement: HTMLDivElement;
     const appendBottom = () => modalElement && document.querySelector("#glass-app").appendChild(modalElement);
     $: modalElement && appendBottom();
+    $: key = active && Math.random()
 </script>
 
 {#if active}

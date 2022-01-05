@@ -12,14 +12,12 @@
 </script>
 
 <script lang="ts">
-    import { beforeUpdate, createEventDispatcher, onDestroy } from "svelte";
-    import { subscribe } from "svelte/internal";
-    import { Subscriber } from "svelte/store";
+    import { createEventDispatcher,onDestroy } from "svelte";
     const dispatch = createEventDispatcher();
 
     export let src: string | ChunkedImageSrc = null;
     export let alt: string = null;
-    export let fit: "contain" | "cover" | "fill" | "scale-down" = "contain";
+    export let fit: "contain" | "cover" = "contain";
 
     let elements: HTMLImageElement[] = [];
     let loadedCount = 0;
@@ -29,17 +27,20 @@
     function onSrcChange(value: typeof src) {
         if (src === srcCache) return;
         srcCache = src;
-        loadedCount = typeof value === "object" ? 1 : 0;
+        loadedCount = typeof value === "object" && value !== null ? 1 : 0;
     }
     function onChunkLoad(event: Event) {
         if (typeof src !== "object") return;
         if (src.images.length === ++loadedCount) dispatch("load", event);
     }
 
-    onDestroy(() => {
+    function clearHtmlImageElements()
+    {
+        console.log(elements)
         for (const element of elements) element?.removeAttribute("src");
         elements = [];
-    });
+    }
+    onDestroy(clearHtmlImageElements);
 </script>
 
 <div class="image" style="--fit:{fit};">
