@@ -36,9 +36,14 @@ export async function ResizeImageHook(
 
             await mkdir(requestDirname, { recursive: true })
             const modifiedJimpObject = await Jimp.read(originalFilename).then((value) =>
-                value.getWidth() > value.getHeight() ?
+            {
+                const width = value.getWidth()
+                const height = value.getHeight()
+                if (quality > width && quality > height) return value
+                return width > height ?
                     value.resize(quality, Jimp.AUTO) :
                     value.resize(Jimp.AUTO, quality)
+            }
             )
             await modifiedJimpObject.writeAsync(requestFilename)
         }
