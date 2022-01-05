@@ -36,6 +36,7 @@
     let positionY: number = 0;
 
     function mouseWheel(event: WheelEvent) {
+        if (mode === 'preview') return
         const rect = containerElement.getBoundingClientRect();
         const currentScale = scale
         scale += event.deltaY * -0.005;
