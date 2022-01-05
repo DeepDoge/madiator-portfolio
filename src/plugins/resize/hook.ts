@@ -73,8 +73,8 @@ export async function ResizeImageHook(
 
                                 let pixelsLeft = height
                                 const chunkCount = Math.ceil(pixelsLeft / maxChunkSize)
-
-                                if (path[2] === 'info.json')
+                                
+                                if (parts[2] === 'info.json')
                                 {
                                     const infoFilename = path.join(requestDirname, `chunk_${maxChunkSize}_info.json`)
                                     const info: ImageChunkInfo = {

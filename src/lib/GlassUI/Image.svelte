@@ -38,6 +38,8 @@
             <img
                 bind:this={element}
                 class="chunk"
+                class:direction-vertical={src.direction === 'vertical'}
+                class:direction-horizontal={src.direction === 'horizontal'}
                 src={image.url}
                 {alt}
                 on:load
@@ -65,9 +67,15 @@
         object-position: center;
     }
 
-    img.chunk {
+    img.chunk.direction-vertical {
         height: calc(var(--area) * 100%);
         top: calc(var(--offset-area) * 100%);
         left: 0;
+    }
+
+    img.chunk.direction-horizontal {
+        width: calc(var(--area) * 100%);
+        left: calc(var(--offset-area) * 100%);
+        top: 0;
     }
 </style>
