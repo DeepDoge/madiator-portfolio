@@ -7,6 +7,26 @@
     export let image: { before: string; after: string } = null;
     export let text: string = null;
     let modalActive = false;
+    let afterImgBlobUrl: string = null
+
+    let modalAbortController: AbortController = null
+    $: onModal(modalActive)
+    async function onModal(active: boolean)
+    {
+        if (active)
+        {
+            modalAbortController?.abort()
+            modalAbortController = new AbortController()
+            if (afterImgBlobUrl) return
+            const respose = await fetch(image.after, { signal: modalAbortController.signal, cache: 'default' })
+            afterImgBlobUrl = URL.createObjectURL(await respose.blob())
+        }
+        else
+        {
+            modalAbortController.abort()
+        }
+    }
+
 </script>
 
 <Card on:click={() => (modalActive = true)} {text}>
@@ -15,7 +35,7 @@
 <Modal bind:active={modalActive}>
     <div class="modal-content">
         <Card {text}>
-            <BeforeAfterImage mode={"compare"} beforeSrc={image.before} afterSrc={image.after} />
+            <BeforeAfterImage mode={"compare"} beforeSrc={image.before} afterSrc={afterImgBlobUrl} />
         </Card>
     </div>
 </Modal>

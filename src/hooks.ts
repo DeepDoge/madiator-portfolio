@@ -24,7 +24,9 @@ export const handle: Handle = async ({ request, resolve }) =>
 	{
 		return {
 			status: 200,
-			headers: {},
+			headers: {
+				"Cache-Control": "max-age=604800, must-revalidate"
+			},
 			body: await readFile(path.resolve(path.join('.', decodeURIComponent(request.url.pathname))))
 		}
 	}

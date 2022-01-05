@@ -52,7 +52,7 @@ export async function ResizeImageHook(
         return {
             status: 200,
             headers: {
-
+                "Cache-Control": "max-age=604800, must-revalidate"
             },
             body: await readFile(requestFilename)
         }
