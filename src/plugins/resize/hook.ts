@@ -26,7 +26,7 @@ export async function ResizeImageHook(
             const quality = parseInt(path.basename(requestPath, fileExtName))
             switch (quality)
             {
-                case 720: case 500: case 200: case 50: break
+                case 720: case 500: case 200: case 50: case 0: break;
                 default: throw new Error(`Quality: ${quality} is unexpected.`)
             }
             const originalPath = `${path.dirname(requestPath).substring(`/${resizedImagePathPrefix}/`.length)}${fileExtName}`
@@ -39,6 +39,7 @@ export async function ResizeImageHook(
             {
                 const width = value.getWidth()
                 const height = value.getHeight()
+                if (quality === 0) return value.quality(90)
                 if (quality > width && quality > height) return value
                 return width > height ?
                     value.resize(quality, Jimp.AUTO) :

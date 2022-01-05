@@ -10,7 +10,7 @@
 </script>
 
 <Card on:click={() => (modalActive = true)} {text}>
-    <BeforeAfterImage mode={"preview"} beforeSrc={ToResizedPath(image.before, 500)} afterSrc={ToResizedPath(image.after, 500)} />
+    <BeforeAfterImage mode={"preview"} beforeSrc={ToResizedPath(image.before, 200)} afterSrc={ToResizedPath(image.after, 500)} />
 </Card>
 <Modal idealWidth="fit-content" bind:active={modalActive}>
     <div class="modal-content">

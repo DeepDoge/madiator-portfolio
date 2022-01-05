@@ -1,7 +1,7 @@
 import path from 'path-browserify'
 
 export const resizedImagePathPrefix = 'resized'
-export function ToResizedPath(pathname: string, quality: 720 | 500 | 200 | 50)
+export function ToResizedPath(pathname: string, quality: 720 | 500 | 200 | 50 | 0)
 {
     // /Foo/Bar/ScreenShots /Screenshot /500 .jpg
     // /Foo/Bar/ScreenShots /Screenshot .jpg
