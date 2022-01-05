@@ -1,11 +1,7 @@
 <script lang="ts">
     import { ToResizedPath } from "$/plugins/resize/common";
-import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
-
     import Modal from "$lib/GlassUI/Modal.svelte";
-
     import BeforeAfterImage from "./BeforeAfterImage.svelte";
-
     import Card from "./Card.svelte";
 
     export let image: { before: string; after: string } = null;

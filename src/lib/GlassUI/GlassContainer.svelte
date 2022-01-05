@@ -26,6 +26,6 @@
     }
 
     .glass-container {
-        padding: .75em;
+        padding: 0.75em;
     }
 </style>

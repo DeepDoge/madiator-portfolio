@@ -1,6 +1,5 @@
 <script context="module" lang="ts">
     import Ripple from "$lib/GlassUI/Ripple.svelte";
-    import { onDestroy, onMount } from "svelte";
     import { writable } from "svelte/store";
 
     export type BeforeAfterMode = "preview" | "compare";
@@ -36,9 +35,9 @@
     let positionY: number = 0;
 
     function mouseWheel(event: WheelEvent) {
-        if (mode === 'preview') return
+        if (mode === "preview") return;
         const rect = containerElement.getBoundingClientRect();
-        const currentScale = scale
+        const currentScale = scale;
         scale += event.deltaY * -0.005;
         scale = Math.min(Math.max(1, scale), 10);
         if (event.deltaY < 0) {
@@ -52,7 +51,7 @@
             const localYOnImageFromCenterNext = localYFromCenter / scale - positionY;
 
             const vectorX = localXOnImageFromCenterNext - localXOnImageFromCenter;
-            const vectorY = localYOnImageFromCenterNext - localYOnImageFromCenter
+            const vectorY = localYOnImageFromCenterNext - localYOnImageFromCenter;
 
             positionX += vectorX;
             positionY += vectorY;
@@ -60,11 +59,11 @@
 
         const minX = rect.width / 2 / scale - rect.width / 2;
         const maxX = -(rect.width / 2) / scale + rect.width / 2;
-        positionX = Math.min(Math.max(minX, positionX), maxX)
+        positionX = Math.min(Math.max(minX, positionX), maxX);
 
         const minY = rect.height / 2 / scale - rect.height / 2;
         const maxY = -(rect.height / 2) / scale + rect.height / 2;
-        positionY = Math.min(Math.max(minY, positionY), maxY)
+        positionY = Math.min(Math.max(minY, positionY), maxY);
     }
 
     function keyPress(event: KeyboardEvent) {
@@ -78,7 +77,7 @@
                 progress += 10;
                 break;
         }
-        progress = Math.min(Math.max(0, progress), 100)
+        progress = Math.min(Math.max(0, progress), 100);
     }
 </script>
 
@@ -108,7 +107,7 @@
 
 <style>
     .container {
-        --transition-duration: .1s;
+        --transition-duration: 0.1s;
         width: 100%;
         height: 100%;
         position: relative;
@@ -137,7 +136,7 @@
     .container:not(:active) .slider {
         transition: left linear var(--transition-duration);
     }
-    
+
     .after {
         position: absolute;
         inset: 0;

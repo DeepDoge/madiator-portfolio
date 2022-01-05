@@ -9,7 +9,6 @@
 </script>
 
 <script lang="ts">
-    
     const name = $page.params.id;
     let showName: string = name;
     let show: Show = null;
@@ -27,7 +26,7 @@
         <Row idealSize="30em" gap="1.5em">
             <!-- intead of index im gonna use id later as key -->
             {#each imageKeys as imageKey (imageKey)}
-                <ShowImageCard image={show.images[imageKey].image} text={imageKey[0] === '_' ? null : imageKey} />
+                <ShowImageCard image={show.images[imageKey].image} text={imageKey[0] === "_" ? null : imageKey} />
             {/each}
         </Row>
     {/if}

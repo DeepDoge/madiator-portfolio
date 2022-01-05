@@ -45,6 +45,6 @@ export async function ResizeImageHook(
             headers: { "Location": request.url.toString() }
         }
     }
-    
+
     return null
 }

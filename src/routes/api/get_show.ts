@@ -22,7 +22,7 @@ export const get: RequestHandler<Locals> = async (req: ServerRequest) =>
 {
     return await api(async () =>
     {
-        
+
         await mkdir(showsDirname, { recursive: true })
         const name = req.url.searchParams.get('name')
         const showImagesDirname = path.join(showsDirname, name, 'images')

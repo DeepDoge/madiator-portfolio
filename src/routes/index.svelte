@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
 	import { GetShows } from "$/plugins/api";
+	import { ToResizedPath } from "$/plugins/resize/common";
 	import Card from "$lib/App/Card.svelte";
 	import Row from "$lib/Row.svelte";
 	import type { ShowInfo } from "./api/get_shows";
@@ -8,8 +9,6 @@
 </script>
 
 <script lang="ts">
-import { ToResizedPath } from "$/plugins/resize/common";
-
 	let showInfos: ShowInfo[] = [];
 	if (typeof window !== "undefined") GetShows().then((r) => (showInfos = r));
 </script>
