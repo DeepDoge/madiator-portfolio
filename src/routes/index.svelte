@@ -8,6 +8,8 @@
 </script>
 
 <script lang="ts">
+import { ToResizedPath } from "$/plugins/resize/common";
+
 	let showInfos: ShowInfo[] = [];
 	if (typeof window !== "undefined") GetShows().then((r) => (showInfos = r));
 </script>
@@ -21,9 +23,9 @@
 	<Row idealSize="30em" gap="1.5em">
 		<!-- intead of index im gonna use id later as key -->
 		{#each showInfos as showInfo (showInfo.name)}
-			<a class="show-info" href="/show/{encodeURIComponent(showInfo.name)}">
+			<a class="show-info" href="/show/{showInfo.name}">
 				<Card text={showInfo.name}>
-					<img src={showInfo.thumbnail} alt={showInfo.name} />
+					<img src={ToResizedPath(showInfo.thumbnail, 500)} alt={showInfo.name} />
 				</Card>
 			</a>
 		{/each}

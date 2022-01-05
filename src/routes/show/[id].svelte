@@ -10,7 +10,7 @@
 
 <script lang="ts">
     
-    const name = decodeURIComponent($page.params.id);
+    const name = $page.params.id;
     let showName: string = name;
     let show: Show = null;
     $: imageKeys = show ? Object.keys(show.images) : [];

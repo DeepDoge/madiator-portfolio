@@ -1,6 +1,7 @@
 import type { Handle } from '@sveltejs/kit'
 import cookie from 'cookie'
 import { makeid } from '../modules/makeid'
+import { ResizeImageHook } from './plugins/resize/hook'
 
 export const handle: Handle = async ({ request, resolve }) =>
 {
@@ -12,6 +13,9 @@ export const handle: Handle = async ({ request, resolve }) =>
 	{
 		request.method = request.url.searchParams.get('_method').toUpperCase()
 	}
+
+	const resizeResult = await ResizeImageHook(request, resolve)
+	if (resizeResult) return resizeResult
 
 	const response = await resolve(request)
 

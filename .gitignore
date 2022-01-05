@@ -4,4 +4,5 @@ node_modules
 /package
 /src/secret.ts
 /static/shows/*
+/static/resized
 /build

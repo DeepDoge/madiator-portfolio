@@ -1,5 +1,6 @@
 <script lang="ts">
-    import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
+    import { ToResizedPath } from "$/plugins/resize/common";
+import GlassContainer from "$lib/GlassUI/GlassContainer.svelte";
 
     import Modal from "$lib/GlassUI/Modal.svelte";
 
@@ -13,7 +14,7 @@
 </script>
 
 <Card on:click={() => (modalActive = true)} {text}>
-    <BeforeAfterImage mode={"preview"} beforeSrc={image.before} afterSrc={image.after} />
+    <BeforeAfterImage mode={"preview"} beforeSrc={ToResizedPath(image.before, 500)} afterSrc={ToResizedPath(image.after, 500)} />
 </Card>
 <Modal idealWidth="fit-content" bind:active={modalActive}>
     <div class="modal-content">
