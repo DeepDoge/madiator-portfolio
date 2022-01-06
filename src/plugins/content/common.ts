@@ -56,7 +56,7 @@ export function CalculateSizes(width: number, height: number, maxChunkSize: MaxC
             size: columnSize,
             count: columnCount
         },
-        totalCount: columnCount + rowCount
+        totalCount: columnCount * rowCount
     }
 }
 
