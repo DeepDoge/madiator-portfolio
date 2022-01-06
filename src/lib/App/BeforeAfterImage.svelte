@@ -123,25 +123,27 @@
         canvasElement.width = chunksInfo.width;
         canvasElement.height = chunksInfo.height;
 
-        const cache = $blobStore[afterSrc];
+        const cache = $blobStore[value];
         if (cache) {
             const blobURL = URL.createObjectURL(cache.blob);
             if (cache.state.y < chunksInfo.sizes.row.count) {
                 const cacheImage = new Image();
+                const loadPromise = new Promise((resolve) => (cacheImage.onload = () => resolve(null)));
                 cacheImage.src = blobURL;
+                await loadPromise;
                 context.drawImage(cacheImage, 0, 0);
-            } else {
-                if (mode !== "compare") return;
-                if (value !== afterSrc) return;
-                if (!active) return;
-                afterBlobSrc = blobURL;
             }
+            if (mode !== "compare") return;
+            if (value !== afterSrc) return;
+            if (!active) return;
+            afterBlobSrc = blobURL;
         }
         for (let y = cache?.state.y ?? 0; y < chunksInfo.sizes.row.count; y++) {
             for (let x = 0; x < chunksInfo.sizes.column.count; x++) {
                 const chunkImage = new Image();
+                const loadPromise = new Promise((resolve) => (chunkImage.onload = () => resolve(null)));
                 chunkImage.src = chunksInfo.chunks[x][y];
-                await new Promise((resolve) => (chunkImage.onload = () => resolve(null)));
+                await loadPromise;
                 context.drawImage(chunkImage, x * chunksInfo.sizes.column.size, y * chunksInfo.sizes.row.size);
                 if (mode !== "compare") return;
                 if (value !== afterSrc) return;
@@ -199,7 +201,7 @@
     <div class="overlay after-overlay">
         {#if !afterLoaded}
             <Loading />
-            <span class="loading-progress-text">{(afterLoadingProgress * 100).toFixed(0)}%</span>
+            <span class="loading-progress-text">{(afterLoadingProgress * 100).toFixed(1)}%</span>
         {/if}
     </div>
     <div class="slider" />
@@ -241,6 +243,7 @@
         bottom: 40%;
         left: 50%;
         transform: translate(-50%, -50%);
+        text-shadow: 0 0 .5em #000;
     }
 
     .mode-preview .overlay {
