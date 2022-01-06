@@ -123,6 +123,8 @@
         canvasElement.width = chunksInfo.width;
         canvasElement.height = chunksInfo.height;
 
+        afterLoadingProgress = .5 / chunksInfo.sizes.totalCount;
+
         const cache = $blobStore[value];
         if (cache) {
             const blobURL = URL.createObjectURL(cache.blob);
