@@ -38,6 +38,10 @@
 
     export let mode: BeforeAfterMode;
 
+    let active = false;
+    onMount(() => (active = true));
+    onDestroy(() => (active = false));
+
     let progress: number = 50;
 
     let containerElement: HTMLDivElement;
@@ -107,11 +111,7 @@
     }
 
     let afterBlobSrc: string = null;
-
-    let active = false;
-    onMount(() => (active = true));
-    onDestroy(() => (active = false));
-
+    let afterLoadingProgress = 0;
     $: onAfterSrcOrModeChange(afterSrc) && mode;
     async function onAfterSrcOrModeChange(value: typeof afterSrc) {
         if (mode !== "compare") return;
@@ -146,6 +146,7 @@
                 if (mode !== "compare") return;
                 if (value !== afterSrc) return;
                 if (!active) return;
+                afterLoadingProgress = (x + y * chunksInfo.sizes.column.count) / chunksInfo.sizes.totalCount;
             }
 
             const blob = await new Promise<Blob>((resolve) => canvasElement.toBlob(resolve));
@@ -161,7 +162,7 @@
             if (!active) return;
             afterBlobSrc = URL.createObjectURL(blob);
         }
-        afterBlobSrc
+        afterBlobSrc;
         afterLoaded = true;
     }
 </script>
@@ -198,6 +199,7 @@
     <div class="overlay after-overlay">
         {#if !afterLoaded}
             <Loading />
+            <span class="loading-progress-text">{(afterLoadingProgress * 100).toFixed(0)}%</span>
         {/if}
     </div>
     <div class="slider" />
@@ -233,6 +235,12 @@
     }
     .after-overlay {
         left: var(--progress);
+    }
+    .after-overlay .loading-progress-text {
+        position: absolute;
+        bottom: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     .mode-preview .overlay {
