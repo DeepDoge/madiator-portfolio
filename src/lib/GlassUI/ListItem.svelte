@@ -1,6 +1,6 @@
 <script lang="ts">
     import GlassElementBackground from "./GlassElementBackground.svelte";
-import Image from "./Image.svelte";
+import Image from "./Img.svelte";
     import Ripple from "./Ripple.svelte";
 
     export let photoSrc: string = null;

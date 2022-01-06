@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
     import { GetShow } from "$/plugins/api";
     import { page } from "$app/stores";
-    import ShowImageCard from "$lib/App/ShowImageCard.svelte";
+    import BeforeAfterImageCard from "$lib/App/BeforeAfterImageCard.svelte";
     import Row from "$lib/Row.svelte";
     import type { Show } from "../api/get_show";
 
@@ -28,7 +28,7 @@
         <Row idealSize="30em" gap="1.5em">
             <!-- intead of index im gonna use id later as key -->
             {#each imageKeys as imageKey (imageKey)}
-                <ShowImageCard image={show.images[imageKey].image} text={imageKey[0] === "_" ? null : imageKey} />
+                <BeforeAfterImageCard image={show.images[imageKey].image} text={imageKey[0] === "_" ? null : imageKey} />
             {/each}
         </Row>
     {:else}

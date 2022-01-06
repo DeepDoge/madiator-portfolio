@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Image from "$lib/GlassUI/Image.svelte";
+    import Image from "$lib/GlassUI/Img.svelte";
 </script>
 
 <div class="container">

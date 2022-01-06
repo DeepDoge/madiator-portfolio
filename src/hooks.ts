@@ -1,9 +1,8 @@
 import type { Handle } from '@sveltejs/kit'
+import type { ServerRequest, ServerResponse } from '@sveltejs/kit/types/hooks'
 import cookie from 'cookie'
 import { makeid } from '../modules/makeid'
-import { readFile } from 'fs/promises'
-import path from 'path'
-import { ResizeImageHook } from './plugins/resize/hook'
+import { ResizeImageHook } from './plugins/content/hook'
 
 export const handle: Handle = async ({ request, resolve }) =>
 {
@@ -16,22 +15,10 @@ export const handle: Handle = async ({ request, resolve }) =>
 		request.method = request.url.searchParams.get('_method').toUpperCase()
 	}
 
-	const resizeResult = await ResizeImageHook(request, resolve)
-	if (resizeResult) return resizeResult
+	const response: ServerResponse = { status: 0, headers: {} }
+	await ResizeImageHook(request, response)
 
-
-	if (request.method === 'GET' && request.url.pathname.startsWith('/content'))
-	{
-		return {
-			status: 200,
-			headers: {
-				"Cache-Control": "max-age=604800, must-revalidate"
-			},
-			body: await readFile(path.resolve(path.join('.', decodeURIComponent(request.url.pathname))))
-		}
-	}
-
-	const response = await resolve(request)
+	if (response.status === 0) Object.assign(response, await resolve(request))
 
 	if (!cookies.deviceid)
 	{

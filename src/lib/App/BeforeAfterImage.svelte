@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-    import Image, { ChunkedImageSrc } from "$lib/GlassUI/Image.svelte";
+    import Img from "$lib/GlassUI/Img.svelte";
     import Ripple from "$lib/GlassUI/Ripple.svelte";
     import { writable } from "svelte/store";
     import Loading from "./Loading.svelte";
@@ -15,12 +15,26 @@
         document.addEventListener("blur", () => mouseDown.set(false));
         document.addEventListener("visibilitychange", () => mouseDown.set(false));
     }
+
+    const blobStore = writable<
+        Record<
+            string,
+            {
+                state: {
+                    y: number;
+                };
+                blob: Blob;
+            }
+        >
+    >({});
 </script>
 
 <script lang="ts">
-    
-    export let beforeSrc: ChunkedImageSrc | string = null;
-    export let afterSrc: ChunkedImageSrc | string = null;
+    import { GetChunksInfo } from "$/plugins/content/common";
+    import { onDestroy, onMount } from "svelte";
+
+    export let beforeSrc: string = null;
+    export let afterSrc: string = null;
 
     export let mode: BeforeAfterMode;
 
@@ -91,6 +105,65 @@
         }
         progress = Math.min(Math.max(0, progress), 100);
     }
+
+    let afterBlobSrc: string = null;
+
+    let active = false;
+    onMount(() => (active = true));
+    onDestroy(() => (active = false));
+
+    $: onAfterSrcOrModeChange(afterSrc) && mode;
+    async function onAfterSrcOrModeChange(value: typeof afterSrc) {
+        if (mode !== "compare") return;
+
+        const chunksInfo = await GetChunksInfo(value, 720);
+        const canvasElement = document.createElement("canvas");
+        const context = canvasElement.getContext("2d");
+
+        canvasElement.width = chunksInfo.width;
+        canvasElement.height = chunksInfo.height;
+
+        const cache = $blobStore[afterSrc];
+        if (cache) {
+            const blobURL = URL.createObjectURL(cache.blob);
+            if (cache.state.y < chunksInfo.sizes.row.count) {
+                const cacheImage = new Image();
+                cacheImage.src = blobURL;
+                context.drawImage(cacheImage, 0, 0);
+            } else {
+                if (mode !== "compare") return;
+                if (value !== afterSrc) return;
+                if (!active) return;
+                afterBlobSrc = blobURL;
+            }
+        }
+        for (let y = cache?.state.y ?? 0; y < chunksInfo.sizes.row.count; y++) {
+            for (let x = 0; x < chunksInfo.sizes.column.count; x++) {
+                const chunkImage = new Image();
+                chunkImage.src = chunksInfo.chunks[x][y];
+                await new Promise((resolve) => (chunkImage.onload = () => resolve(null)));
+                context.drawImage(chunkImage, x * chunksInfo.sizes.column.size, y * chunksInfo.sizes.row.size);
+                if (mode !== "compare") return;
+                if (value !== afterSrc) return;
+                if (!active) return;
+            }
+
+            const blob = await new Promise<Blob>((resolve) => canvasElement.toBlob(resolve));
+            blobStore.update((store) => {
+                store[afterSrc] = {
+                    state: { y: y + 1 },
+                    blob,
+                };
+                return store;
+            });
+            if (mode !== "compare") return;
+            if (value !== afterSrc) return;
+            if (!active) return;
+            afterBlobSrc = URL.createObjectURL(blob);
+        }
+        afterBlobSrc
+        afterLoaded = true;
+    }
 </script>
 
 <div
@@ -111,10 +184,10 @@
 >
     <div class="images">
         <div class="before image">
-            <Image src={beforeSrc} fit={mode === 'preview' ? 'cover' : 'contain'} on:load={() => (beforeLoaded = true)} />
+            <Img src={beforeSrc} fit={mode === "preview" ? "cover" : "contain"} on:load={() => (beforeLoaded = true)} />
         </div>
         <div class="after image">
-            <Image src={afterSrc} fit={mode === 'preview' ? 'cover' : 'contain'} on:load={() => (afterLoaded = true)} />
+            <Img src={mode === "compare" ? afterBlobSrc : afterSrc} fit={mode === "preview" ? "cover" : "contain"} on:load={() => !afterBlobSrc && (beforeLoaded = true)} />
         </div>
     </div>
     <div class="overlay before-overlay">
@@ -190,7 +263,7 @@
         clip-path: polygon(var(--progress-on-image) 0%, 100% 0%, 100% 100%, var(--progress-on-image) 100%);
     }
 
-    .after-loading .after{
+    .after-loading .after {
         backdrop-filter: saturate(0) blur(3px);
     }
 
