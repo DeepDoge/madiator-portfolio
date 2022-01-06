@@ -123,7 +123,7 @@
         canvasElement.width = chunksInfo.width;
         canvasElement.height = chunksInfo.height;
 
-        afterLoadingProgress = .5 / chunksInfo.sizes.totalCount;
+        afterLoadingProgress = .5 / (chunksInfo.sizes.totalCount + 1);
 
         const cache = $blobStore[value];
         if (cache) {
@@ -150,7 +150,7 @@
                 if (mode !== "compare") return;
                 if (value !== afterSrc) return;
                 if (!active) return;
-                afterLoadingProgress = (x + y * chunksInfo.sizes.column.count) / chunksInfo.sizes.totalCount;
+                afterLoadingProgress = ((x + y * chunksInfo.sizes.column.count) + 1) / (chunksInfo.sizes.totalCount + 1);
             }
 
             const blob = await new Promise<Blob>((resolve) => canvasElement.toBlob(resolve));
