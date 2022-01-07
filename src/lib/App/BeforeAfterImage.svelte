@@ -161,7 +161,7 @@
                 y === chunksInfo.sizes.row.count - 1 ||
                 loadTime > 1000
             ) {
-                const blob = await new Promise<Blob>((resolve) => canvasElement.toBlob(resolve));
+                const blob = await new Promise<Blob>((resolve) => canvasElement.toBlob(resolve, 'image/webp'));
                 blobStore.update((store) => {
                     store[afterSrc] = {
                         state: { y: y + 1 },
