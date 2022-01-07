@@ -48,7 +48,7 @@
     function mouse(event: MouseEvent | TouchEvent) {
         if (mode === "preview") return;
         if (event instanceof MouseEvent && !$mouseDown) return;
-        if (event instanceof TouchEvent && event.touches.length > 1) return
+        if (event instanceof TouchEvent && event.touches.length > 1) return;
         event.preventDefault();
         const rect = containerElement.getBoundingClientRect();
         const localX = (event instanceof MouseEvent ? event.x : event.touches[0].pageX) - rect.x;
@@ -124,7 +124,7 @@
         canvasElement.width = chunksInfo.width;
         canvasElement.height = chunksInfo.height;
 
-        afterLoadingProgress = .5 / (chunksInfo.sizes.totalCount + 1);
+        afterLoadingProgress = 0.5 / (chunksInfo.sizes.totalCount + 1);
 
         const cache = $blobStore[value];
         if (cache) {
@@ -141,6 +141,8 @@
             if (!active) return;
             afterBlobSrc = blobURL;
         }
+
+        const startedToLoadAt = performance.now()
         for (let y = cache?.state.y ?? 0; y < chunksInfo.sizes.row.count; y++) {
             for (let x = 0; x < chunksInfo.sizes.column.count; x++) {
                 const chunkImage = new Image();
@@ -151,21 +153,27 @@
                 if (mode !== "compare") return;
                 if (value !== afterSrc) return;
                 if (!active) return;
-                afterLoadingProgress = ((x + y * chunksInfo.sizes.column.count) + 1) / (chunksInfo.sizes.totalCount + 1);
+                afterLoadingProgress = (x + y * chunksInfo.sizes.column.count + 1) / (chunksInfo.sizes.totalCount + 1);
             }
 
-            const blob = await new Promise<Blob>((resolve) => canvasElement.toBlob(resolve));
-            blobStore.update((store) => {
-                store[afterSrc] = {
-                    state: { y: y + 1 },
-                    blob,
-                };
-                return store;
-            });
-            if (mode !== "compare") return;
-            if (value !== afterSrc) return;
-            if (!active) return;
-            afterBlobSrc = URL.createObjectURL(blob);
+            const loadTime = performance.now() - startedToLoadAt
+            if (
+                y === chunksInfo.sizes.row.count - 1 ||
+                loadTime > 1000
+            ) {
+                const blob = await new Promise<Blob>((resolve) => canvasElement.toBlob(resolve));
+                blobStore.update((store) => {
+                    store[afterSrc] = {
+                        state: { y: y + 1 },
+                        blob,
+                    };
+                    return store;
+                });
+                if (mode !== "compare") return;
+                if (value !== afterSrc) return;
+                if (!active) return;
+                afterBlobSrc = URL.createObjectURL(blob);
+            }
         }
         afterBlobSrc;
         afterLoaded = true;
@@ -246,7 +254,7 @@
         bottom: 40%;
         left: 50%;
         transform: translate(-50%, -50%);
-        text-shadow: 0 0 .5em #000;
+        text-shadow: 0 0 0.5em #000;
     }
 
     .mode-preview .overlay {
