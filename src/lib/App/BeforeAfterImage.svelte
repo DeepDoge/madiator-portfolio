@@ -48,6 +48,7 @@
     function mouse(event: MouseEvent | TouchEvent) {
         if (mode === "preview") return;
         if (event instanceof MouseEvent && !$mouseDown) return;
+        if (event instanceof TouchEvent && event.touches.length > 1) return
         event.preventDefault();
         const rect = containerElement.getBoundingClientRect();
         const localX = (event instanceof MouseEvent ? event.x : event.touches[0].pageX) - rect.x;
